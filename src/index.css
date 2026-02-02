@@ -1,0 +1,74 @@
+:root{
+  --bg: #f7f7fb;
+  --card: #ffffff;
+  --accent: #2563eb;
+  --text: #0f172a;
+}
+html,body,#root{height:100%;}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.app{
+  max-width:900px;
+  margin:32px auto;
+  padding:24px;
+}
+.card{
+  background:var(--card);
+  border-radius:10px;
+  padding:18px;
+  box-shadow:0 4px 12px rgba(15,23,42,0.06);
+}
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.title{
+  margin:0;
+  font-size:20px;
+}
+.subtitle{
+  margin:15;
+  color:#334155;
+  font-size:18px;
+}
+.date{
+  color:#475569;
+  font-size:13px;
+}
+.hour-text p::first-letter {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: brown;
+}
+
+.toggle-btn{
+  background:transparent;
+  border:1px solid var(--accent);
+  color:var(--accent);
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+}
+.toggle-btn:hover{background:rgba(37,99,235,0.06)}
+
+/* Two-column layout for hour page */
+.hour-columns{
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+}
+.hour-columns .card{
+  flex:1 1 0;
+}
+@media (max-width:700px){
+  .hour-columns{flex-direction:column}
+}
