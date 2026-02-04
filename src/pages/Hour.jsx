@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import  Verses  from '../components/Verses.jsx'
 import { initial_verset, hymne_sexte, ant_sexte_dom, Dom_sexte,
 kyrie, pater_silent, dominus_vobiscum, oratio, benedicamus,
@@ -13,6 +13,22 @@ export default function Hour() {
   const { hour } = useParams()
   const name = hour ? decodeURIComponent(hour) : ''
   const [showFr, setShowFr] = useState(true)
+  const [content, setContent] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!name) return
+    setLoading(true)
+    setError(null)
+    fetch(`/api/hour/${encodeURIComponent(name)}?lang=la`)
+      .then(r => r.json())
+      .then(data => {
+        setContent(data.content)
+      })
+      .catch(err => setError(err.message || 'fetch error'))
+      .finally(() => setLoading(false))
+  }, [name])
 
   return (
     <div>
@@ -27,18 +43,78 @@ export default function Hour() {
       </div>
 
       <div className="hour-columns" style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-        <section className="card hour-page" style={{ marginTop: 16 }}>
+          <section className="card hour-page" style={{ marginTop: 16 }}>
           <h2>{name}</h2>
-          {hour_body(name)}
+          {loading && <p>Loading…</p>}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {!loading && !error && content && (
+            <div className="hour-text">
+              <p>{content.initial_verset || ''}</p>
+              <p>{content.hymne || ''}</p>
+              <p>{content.antiphon || ''}</p>
+              {Array.isArray(content.psaumes) && content.psaumes.map(p => <p key={p}>{p}</p>)}
+              <p>{content.capit || ''}</p>
+              <p>{content.vers || ''}</p>
+              <p>{content.kyrie || ''}</p>
+              <p>{content.pater || ''}</p>
+              <p>{content.dominus || ''}</p>
+              <p>{content.oratio || ''}</p>
+              <p>{content.benedicamus || ''}</p>
+              <p>{content.fidelium_animae || ''}</p>
+              <p>{content.divinum || ''}</p>
+            </div>
+          )}
+          {!loading && !error && !content && (
+            hour_body(name)
+          )}
         </section>
 
         {showFr && (
           <section className="card french-page" style={{ marginTop: 16 }}>
             <h2>Français</h2>
-            {hour_body_french(name)}
+            <FrenchColumn name={name} />
           </section>
         )}
       </div>
+    </div>
+  )
+}
+
+function FrenchColumn({ name }) {
+  const [content, setContent] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!name) return
+    setLoading(true)
+    setError(null)
+    fetch(`/api/hour/${encodeURIComponent(name)}?lang=fr`)
+      .then(r => r.json())
+      .then(data => setContent(data.content))
+      .catch(e => setError(e.message || 'fetch error'))
+      .finally(() => setLoading(false))
+  }, [name])
+
+  if (loading) return <p>Loading…</p>
+  if (error) return <p style={{ color: 'red' }}>{error}</p>
+  if (!content) return hour_body_french(name)
+
+  return (
+    <div className="hour-text">
+      <p>{content.initial_verset || ''}</p>
+      <p>{content.hymne || ''}</p>
+      <p>{content.antiphon || ''}</p>
+      {Array.isArray(content.psaumes) && content.psaumes.map(p => <p key={p}>{p}</p>)}
+      <p>{content.capit || ''}</p>
+      <p>{content.vers || ''}</p>
+      <p>{content.kyrie || ''}</p>
+      <p>{content.pater || ''}</p>
+      <p>{content.dominus || ''}</p>
+      <p>{content.oratio || ''}</p>
+      <p>{content.benedicamus || ''}</p>
+      <p>{content.fidelium_animae || ''}</p>
+      <p>{content.divinum || ''}</p>
     </div>
   )
 }
