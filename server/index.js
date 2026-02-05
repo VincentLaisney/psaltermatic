@@ -20,10 +20,23 @@ app.get('/api/hours', (req, res) => {
   res.json(Object.keys(data));
 });
 
-// Return hour content. Query param lang=fr|la (default la)
-app.get('/api/hour/:name', async (req, res) => {
+// Return liturgy for a given date (YYYY-MM-DD)
+app.get('/api/liturgy', (req, res) => {
   try {
-    const name = req.params.name;
+    const date = req.query.date;
+    if (!date) return res.status(400).json({ error: 'date query param required' });
+    return res.json({ asText: `De ea. 4ᵉ semaine du Temps ordinaire` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'server error' });
+  }
+});
+
+// Return hour content. Query param lang=fr|la (default la)
+app.get('/api/hour/:key', async (req, res) => {
+  try {
+    const key = req.params.key;
+    const name = decodeURIComponent(key);
     const lang = (req.query.lang || 'la');
 
     // Try DB first (if a table `hours` exists), fallback to in-memory data
