@@ -33,27 +33,15 @@ app.get('/api/liturgy', (req, res) => {
 });
 
 // Return hour content. Query param lang=fr|la (default la)
-app.get('/api/hour/:key', async (req, res) => {
+const { ordinary } = require('./work/ordinary');
+app.get('/api/hour/:hour', async (req, res) => {
   try {
-    const key = req.params.key;
-    const name = decodeURIComponent(key);
+    const hour = req.params.hour;
     const lang = (req.query.lang || 'la');
+    const date = req.query.date || Date.now();
 
-    // Try DB first (if a table `hours` exists), fallback to in-memory data
-    try {
-      const rows = await db.query('SELECT content FROM hours WHERE name = ? AND lang = ?', [name, lang]);
-      if (rows && rows.length) {
-        return res.json({ source: 'db', content: rows[0].content });
-      }
-    } catch (e) {
-      // ignore DB errors and fallback
-      console.warn('DB lookup failed, using in-memory data', e.message);
-    }
-
-    const hour = data[name];
-    if (!hour) return res.status(404).json({ error: 'Hour not found' });
-    const payload = hour[lang] || hour.la;
-    return res.json({ source: 'memory', content: payload });
+    const result = await ordinary(date, hour, lang);
+    return res.json({ source: 'ordinary', content: result });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'server error' });

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import HourContent from '../components/HourContent.jsx'
 import  Verses  from '../components/Verses.jsx'
 import { initial_verset, hymne_sexte, ant_sexte_dom, Dom_sexte,
@@ -9,9 +9,19 @@ import { initial_verset_fr, hymne_sexte_fr, ant_sexte_dom_fr, Dom_sexte_fr,
   kyrie_fr, pater_silent_fr, dominus_vobiscum_fr, oratio_fr, benedicamus_fr,
   fidelium_animae_fr, divinum_fr, psaumes_fr } from '../data/donnees_fr.jsx'
 
+const HourContext = React.createContext();
 
-export default function Hour() {
+export default function HourProvider({date}) {
   const { hour } = useParams()
+  // console.log(`HourProvider: rendering hour ${hour} for date ${date.toISOString()}`);
+  return (
+    <HourContext.Provider value={date}>
+      <Hour hour={hour} />
+    </HourContext.Provider>
+  );
+}
+
+function Hour({hour}) {
   const name = hour ? decodeURIComponent(hour) : ''
   const [showFr, setShowFr] = useState(true)
 
@@ -88,3 +98,4 @@ function FrenchColumn({ name }) {
   )
 }
 
+export { HourContext };

@@ -1,43 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { HourContext } from '../App.jsx'
+import { HourContext } from '../pages/Hour.jsx'
 import axios from 'axios'
 
 function HourContent({ hour, lang }) {
-    const {date} = React.useContext(HourContext);
+    const date = React.useContext(HourContext);
+    // console.log(`HourContent: fetching content for hour ${hour}, lang ${lang}, date ${date}`);
     const [content, setContent] = useState({})
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-
-    const day_to_feria = {
-        0: 'Dom',
-        1: 'F2',
-        2: 'F3',
-        3: 'F4',
-        4: 'F5',
-        5: 'F6',
-        6: 'Sab'
-    }
-
-    const hour_abbr = {
-        'Matines-Laudes': 'mat_laud',
-        'Matines': 'mat',
-        'Laudes': 'laud',
-        'Tierce': 'tier',
-        'Sexte': 'sext',
-        'None': 'non',
-        'Vêpres': 'vep',
-        'Complies': 'comp'
-    }
-
-    const key = `${day_to_feria[date.getDay()]}_${hour_abbr[hour]}`
     
     useEffect(() => {
     if (!hour) return
     setLoading(true)
     setError(null)
-    axios.get(`/api/hour/${encodeURIComponent(key)}?lang=la`)
+    axios.get(`/api/hour/${encodeURIComponent(hour)}`, {
+        params: {
+            date: date.toISOString().split('T')[0],
+            lang: 'la',
+        }
+    })
         .then(response => {
             setContent(response.data.content)
+        //  console.log(`HourContent: fetched content for hour ${hour}, lang ${lang}:`, response.data.content);   
       })
       .catch(err => setError(err.message || 'fetch error'))
       .finally(() => setLoading(false))
@@ -47,26 +31,71 @@ function HourContent({ hour, lang }) {
     if (error) return <p style={{ color: 'red' }}>{error}</p>
     if (!content) return hour_body_french(hour)
 
-
-
-    return (
-        <div className="hour-text">
-            <p>{content.initial_verset || ''}</p>
-            <p>{content.hymne || ''}</p>
-            <p>{content.antiphon || ''}</p>
-            {Array.isArray(content.psaumes) && content.psaumes.map(p => <p key={p}>{p}</p>)}
-            <p>{content.capit || ''}</p>
-            <p>{content.vers || ''}</p>
-            <p>{content.kyrie || ''}</p>
-            <p>{content.pater_silent || ''}</p>
-            <p>{content.dominus || ''}</p>
-            <p>{content.oratio || ''}</p>
-            <p>{content.benedicamus || ''}</p>
-            <p>{content.fidelium_animae || ''}</p>
-            <p>{content.divinum || ''}</p>
-        </div>
-    )
+    switch (hour) {
+        case 'Matines-Laudes':
+            return (
+                <div className="hour-text">
+                    <p>{content.initial_verset || ''}</p>
+                    <p>{content.hymne || ''}</p>
+                </div>
+            );
+        case 'Matines':
+            return (
+                <div className="hour-text">
+                    <p>{content.initial_verset || ''}</p>
+                    <p>{content.hymne || ''}</p>
+                </div>
+            );
+        case 'Laudes':
+            return (
+                <div className="hour-text">
+                    <p>{content.initial_verset || ''}</p>
+                    <p>{content.hymne || ''}</p>
+                </div>
+            );
+        case 'Tierce':
+        case 'Sexte':
+        case 'None':
+            return (
+                <div className="hour-text">
+                    <p>{content.initial_verset || ''}</p>
+                    <p>{content.hymne || ''}</p>
+                    <p>{content.antiphon || ''}</p>
+                    {Array.isArray(content.psaumes) && content.psaumes.map(p => <p key={p}>{p}</p>)}
+                    <p>{content.antiphon || ''}</p>
+                    <p>{content.capit || ''}</p>
+                    <p>{content.vers || ''}</p>
+                    <p>{content.kyrie || ''}</p>
+                    <p>{content.pater_silent || ''}</p>
+                    <p>{content.dominus || ''}</p>
+                    <p>{content.oratio || ''}</p>
+                    <p>{content.dominus || ''}</p>
+                    <p>{content.benedicamus || ''}</p>
+                    <p>{content.fidelium_animae || ''}</p>
+                    <p>{content.divinum || ''}</p>
+                </div>
+            );
+        case 'Vêpres':
+            return (
+                <div className="hour-text">
+                    <p>{content.initial_verset || ''}</p>
+                    <p>{content.hymne || ''}</p>
+                </div>
+            );
+        case 'Complies':
+            return (
+                <div className="hour-text">
+                    <p>{content.initial_verset || ''}</p>
+                    <p>{content.hymne || ''}</p>
+                </div>
+            );
+        default:
+            return (
+                <p>Texte de l'heure pour <strong>{hour}</strong>.</p>
+            )
+    }
 }
+
 
 function hour_body(hour) {
   switch (hour) {
@@ -92,13 +121,13 @@ function hour_body(hour) {
             <p><Verses content={divinum} /></p>
           </div> 
       ) 
-          break;
+          ;
       
         default:
           return (
           <p>Texte de l'heure pour <strong>{hour}</strong>.</p>
           )
-          break;
+          ;
   }
 }
 

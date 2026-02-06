@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './index.css'
 import Header from './components/Header'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import Hour from './pages/Hour'
+import HourProvider from './pages/Hour'
 import { getLiturgy } from './services/hours-content'
-
-const HourContext = React.createContext();
 
 function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -16,7 +14,10 @@ function App() {
   // }, [])
 
   const hours = [(is_thursday(currentDate) ? 'Matines-Laudes' : null), 'Matines', 'Laudes', 'Tierce', 'Sexte', 'None', 'Vêpres', 'Complies']
-  getLiturgy(currentDate, SetLiturgy);
+
+  useEffect(() => {
+    getLiturgy(currentDate, SetLiturgy);
+  }, [currentDate])
 
   return (
     <Router>
@@ -36,11 +37,7 @@ function App() {
         </section>
 
         <Routes>
-          <Route path="/hour/:hour" element={<HourContext.Provider value={{ date: currentDate,
-                                                                        liturgy: liturgy  
-           }} >
-                                                <Hour />
-                                            </HourContext.Provider>} />
+          <Route path="/hour/:hour" element={<HourProvider date={currentDate}/>} />
           <Route path="/" element={null} />
         </Routes>
       </main>
@@ -53,4 +50,3 @@ function is_thursday(date) {
 }
 
 export default App
-export { HourContext };

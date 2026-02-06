@@ -41,7 +41,7 @@ Insert example (content as JSON):
 
 ```
 INSERT INTO hours (name, lang, content) VALUES (
-  'Dom_sext', 'la', JSON_OBJECT('hymne', 'ant_2', 'antiphon', 'ant_3', 'ps1', 'ant_2','ps2', 'ant_2','ps3', 'ant_2','capit', 'ant_2','vers', 'ant_2','oratio')
+  'Dom_sext', 'la', JSON_OBJECT('hymne', 'ant_2', 'antiphon', 'ant_3', 'ps1', 'ant_2','ps2', 'ant_2','ps3', 'ant_2','capit', 'ant_2','vers', 'ant_2','oratio', 'ant_2')
 );
 INSERT INTO hours (name, lang, content) VALUES (
   'Com_com', 'la', JSON_OBJECT('initial_verset', 'ant_1', 'kyrie', 'ant_2', 'pater', 'ant_3', 'pater_silent', 'ant_2','dominus', 'ant_2', 'benedicamus', 'ant_2','fidelium_animae', 'ant_2','divinum', 'ant_2')
