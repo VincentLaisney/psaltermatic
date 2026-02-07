@@ -46,4 +46,31 @@ INSERT INTO hours (name, lang, content) VALUES (
 INSERT INTO hours (name, lang, content) VALUES (
   'Com_com', 'la', JSON_OBJECT('initial_verset', 'ant_1', 'kyrie', 'ant_2', 'pater', 'ant_3', 'pater_silent', 'ant_2','dominus', 'ant_2', 'benedicamus', 'ant_2','fidelium_animae', 'ant_2','divinum', 'ant_2')
 );
+
+Security & API key
+
+- You can protect the API by setting a shared secret on the server. In `server/.env` set:
+
+```
+API_SECRET=your-server-secret
+```
+
+- If `API_SECRET` is set, the server will require a header `X-PSALT-KEY` with the same value for `/api/*` routes (except `/api/health` and `/api/set-cookie`). Requests without the header receive 401.
+
+- Frontend usage: if you want the frontend to automatically send the key, build-time set a Vite environment variable `VITE_API_KEY` to the same secret and the frontend will include it in the `X-PSALT-KEY` header for requests. Example when running the dev server:
+
+```
+VITE_API_KEY=your-server-secret API_SECRET=your-server-secret npm run dev -- --host
+```
+
+- WARNING: embedding a secret in frontend code is inherently insecure: anyone can view the built JS and extract the key. This approach will deter casual scrapers, but cannot stop a determined attacker. For stronger protection consider server-side methods (API tokens issued from a trusted server, rate-limiting, IP restrictions, or requiring signed requests).
+
+CORS and cookies
+
+- To restrict origins you can set `CORS_ORIGINS` in `.env` as a comma-separated list of allowed origins. If unset, the server reflects the request origin and allows it.
+
+```
+CORS_ORIGINS=http://localhost:5173,http://192.168.1.10:5173
+```
+
 ```

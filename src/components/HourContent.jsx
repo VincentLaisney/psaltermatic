@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HourContext } from '../pages/Hour.jsx'
-import axios from 'axios'
+import api from '../services/api'
 
 function HourContent({ hour, lang }) {
     const date = React.useContext(HourContext);
@@ -13,10 +13,10 @@ function HourContent({ hour, lang }) {
     if (!hour) return
     setLoading(true)
     setError(null)
-    axios.get(`/api/hour/${encodeURIComponent(hour)}`, {
+    api.get(`/hour/${encodeURIComponent(hour)}`, {
         params: {
             date: date.toISOString().split('T')[0],
-            lang: 'la',
+            lang: lang,
         }
     })
         .then(response => {
@@ -25,7 +25,7 @@ function HourContent({ hour, lang }) {
       })
       .catch(err => setError(err.message || 'fetch error'))
       .finally(() => setLoading(false))
-    }, [hour, lang])
+    }, [hour, lang, date])
 
     if (loading) return <p>Loading…</p>
     if (error) return <p style={{ color: 'red' }}>{error}</p>

@@ -43,9 +43,9 @@ async function ordinary(date, hour, lang = 'la') {
 	}
 
 	try {
-		const rows = await db.query('SELECT content FROM hours WHERE name = "Com_com" AND lang = "la"'); // ?', [lang]);
+		const rows = await db.query('SELECT content FROM hours WHERE name = "Com_com" AND lang = ?', [lang]);
 		if (rows && rows.length) commun = rows[0].content;
-        // console.log(`ordinary(): DB lookup successful for Com_com (la) - commun content: ${commun}`);
+        // console.log(`ordinary(): DB lookup successful for Com_com (${lang}) - commun content: ${commun}`);
 	} catch (e) {
 		console.warn('ordinary(): DB lookup failed for commun', e.message);
 	}

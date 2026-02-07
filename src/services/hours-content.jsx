@@ -1,8 +1,7 @@
-import axios from 'axios'
-const baseUrl = 'http://localhost:3000/api'
+import api from './api'
 
 function getLiturgy(date, SetLiturgy) {
-    return axios.get(`${baseUrl}/liturgy`, {
+    return api.get(`/liturgy`, {
         params: {
             date: date.toISOString().split('T')[0]
         }
