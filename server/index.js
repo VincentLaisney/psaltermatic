@@ -3,6 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const db = require('./db');
 const data = require('./data');
+const { ordinary } = require('./work/ordinary');
+const { getLiturgyForDate } = require('./work/liturgy');
 
 dotenv.config();
 
@@ -63,7 +65,7 @@ app.get('/api/liturgy', (req, res) => {
   try {
     const date = req.query.date;
     if (!date) return res.status(400).json({ error: 'date query param required' });
-    return res.json({ asText: `De ea. 4ᵉ semaine du Temps ordinaire` });
+    return res.json(getLiturgyForDate(date));
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'server error' });
@@ -71,7 +73,6 @@ app.get('/api/liturgy', (req, res) => {
 });
 
 // Return hour content. Query param lang=fr|la (default la)
-const { ordinary } = require('./work/ordinary');
 app.get('/api/hour/:hour', async (req, res) => {
   try {
     const hour = req.params.hour;
