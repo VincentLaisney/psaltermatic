@@ -30,7 +30,7 @@ export default defineConfig({
       }
     },
     // allow access from LAN (other machines)
-    allowedHosts: 'all',
+    allowedHosts: ['python.asj.com', 'all'],
     hmr: {
       // explicitly expose the HMR websocket host so clients can connect
       host: devHost,

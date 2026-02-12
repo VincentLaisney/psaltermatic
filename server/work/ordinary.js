@@ -1,5 +1,6 @@
 const db = require('../db');
 const data = require('../data');
+const { populate_with_texts } = require('./populate');
 
 async function ordinary(date, hour, lang = 'la') {
 	// date: Date or date-string; hour: string like 'Sexte' or 'Matines'
@@ -32,18 +33,18 @@ async function ordinary(date, hour, lang = 'la') {
 	let psalter = null;
 	let commun = null;
 
-	// Try DB lookup for both psalter and commun
+	// Try DB lookup for both psalter and commun. All for latin because the index is done on the latin base.
 	try {
-		const rows = await db.query('SELECT content FROM hours WHERE name = ? AND lang = ?', [name, lang]);
+		const rows = await db.query('SELECT content FROM hours WHERE name = ? AND lang = "la"', [name]);
 		if (rows && rows.length) psalter = rows[0].content;
-        // console.log(`ordinary(): DB lookup successful for ${name} (${lang}) - psalter content: ${psalter}`);
+        // console.log(`ordinary(): DB lookup successful for ${name} (${lang}) - psalter content: ${JSON.stringify(psalter)}`);
 	} catch (e) {
 		// ignore DB errors
 		console.warn('ordinary(): DB lookup failed for psalter', e.message);
 	}
 
 	try {
-		const rows = await db.query('SELECT content FROM hours WHERE name = "Com_com" AND lang = ?', [lang]);
+		const rows = await db.query('SELECT content FROM hours WHERE name = "Com_com" AND lang = "la"');
 		if (rows && rows.length) commun = rows[0].content;
         // console.log(`ordinary(): DB lookup successful for Com_com (${lang}) - commun content: ${commun}`);
 	} catch (e) {
@@ -56,7 +57,7 @@ async function ordinary(date, hour, lang = 'la') {
 	// 	if (hour_text) psalter = hour_text[lang] || hour_text.la;
 	// }
 
-    return {...psalter, ...commun };
+	return await populate_with_texts({...psalter, ...commun });
 }
 
 module.exports = { ordinary };

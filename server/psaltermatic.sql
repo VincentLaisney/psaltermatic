@@ -18,7 +18,7 @@
 --
 -- Table structure for table `hours`
 --
-
+use psaltermatic;
 DROP TABLE IF EXISTS `hours`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -38,7 +38,7 @@ CREATE TABLE `hours` (
 
 LOCK TABLES `hours` WRITE;
 /*!40000 ALTER TABLE `hours` DISABLE KEYS */;
-INSERT INTO `hours` VALUES (13,'Com_com','la','{\"kyrie\": \"ant_2\", \"pater\": \"ant_3\", \"divinum\": \"ant_2\", \"dominus\": \"ant_2\", \"benedicamus\": \"ant_2\", \"pater_silent\": \"ant_2\", \"initial_verset\": \"ant_1\", \"fidelium_animae\": \"ant_2\"}'),(14,'Dom_sext','la','{\"ps1\": \"ant_2\", \"ps2\": \"ant_2\", \"ps3\": \"ant_2\", \"vers\": \"ant_2\", \"capit\": \"ant_2\", \"hymne\": \"ant_2\", \"oratio\": \"ant_2\", \"antiphon\": \"ant_3\"}');
+INSERT INTO `hours` VALUES (13,'Com_com','la','{\"kyrie\": \"ant_prayers_6\", \"pater\": \"ant_prayers_0\", \"divinum\": \"ant_prayers_38-2\", \"dominus\": \"ant_prayers_8\", \"benedicamus\": \"ant_prayers_8-2\", \"pater_silent\": \"ant_prayers_6-2\", \"initial_verset\": \"ant_prayers_1\", \"fidelium_animae\": \"ant_prayers_38\"}'),(14,'Dom_sext','la','{\"ps1\": \"ps_118-08\", \"ps2\": \"ps_118-09\", \"ps3\": \"ps_118-10\", \"verset\": \"ant_verset_90\", \"capit\": \"ant_capit_90\", \"hymn\": \"ant_hymn_87\", \"antiphon\": \"ant_antiphon_87\"}');
 /*!40000 ALTER TABLE `hours` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

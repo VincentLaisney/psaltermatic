@@ -3,8 +3,12 @@ function Verses({ content }) {
         return (content.map((line, index) => (
             <span key={index}>{line}<br/></span>
         )))
+    } else if ((typeof content === 'string') && content.includes('\n')) {
+        return (content.split('\n').map((line, index) => (
+            <span key={index}>{line}<br/></span>
+        ))) 
     } else {
-        return null;
+        return <span>{content}</span>;
     }
 }
 export default Verses ;

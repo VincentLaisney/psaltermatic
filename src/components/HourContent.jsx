@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HourContext } from '../pages/Hour.jsx'
+import Verses from './Verses.jsx'
 import api from '../services/api'
 
 function HourContent({ hour, lang }) {
@@ -36,21 +37,21 @@ function HourContent({ hour, lang }) {
             return (
                 <div className="hour-text">
                     <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymne || ''}</p>
+                    <p>{content.hymn || ''}</p>
                 </div>
             );
         case 'Matines':
             return (
                 <div className="hour-text">
                     <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymne || ''}</p>
+                    <p>{content.hymn || ''}</p>
                 </div>
             );
         case 'Laudes':
             return (
                 <div className="hour-text">
                     <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymne || ''}</p>
+                    <p>{content.hymn || ''}</p>
                 </div>
             );
         case 'Tierce':
@@ -58,35 +59,37 @@ function HourContent({ hour, lang }) {
         case 'None':
             return (
                 <div className="hour-text">
-                    <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymne || ''}</p>
-                    <p>{content.antiphon || ''}</p>
-                    {Array.isArray(content.psaumes) && content.psaumes.map(p => <p key={p}>{p}</p>)}
-                    <p>{content.antiphon || ''}</p>
-                    <p>{content.capit || ''}</p>
-                    <p>{content.vers || ''}</p>
-                    <p>{content.kyrie || ''}</p>
-                    <p>{content.pater_silent || ''}</p>
-                    <p>{content.dominus || ''}</p>
-                    <p>{content.oratio || ''}</p>
-                    <p>{content.dominus || ''}</p>
-                    <p>{content.benedicamus || ''}</p>
-                    <p>{content.fidelium_animae || ''}</p>
-                    <p>{content.divinum || ''}</p>
+                    <p><Verses content={content.initial_verset || ''} /></p>
+                    <p><Verses content={content.hymn || ''} /></p>
+                    <p><Verses content={content.antiphon || ''} /></p>
+                    <p><Verses content={content.ps1 || ''} /></p>
+                    <p><Verses content={content.ps2 || ''} /></p>
+                    <p><Verses content={content.ps3 || ''} /></p>
+                    <p><Verses content={content.antiphon || ''} /></p>
+                    <p><Verses content={content.capit || ''} /></p>
+                    <p><Verses content={content.verset || ''} /></p>
+                    <p><Verses content={content.kyrie || ''} /></p>
+                    <p><Verses content={content.pater_silent || ''} /></p>
+                    <p><Verses content={content.dominus || ''} /></p>
+                    <p><Verses content={content.oratio || ''} /></p>
+                    <p><Verses content={content.dominus || ''} /></p>
+                    <p><Verses content={content.benedicamus || ''} /></p>
+                    <p><Verses content={content.fidelium_animae || ''} /></p>
+                    <p><Verses content={content.divinum || ''} /></p>
                 </div>
             );
         case 'Vêpres':
             return (
                 <div className="hour-text">
                     <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymne || ''}</p>
+                    <p>{content.hymn || ''}</p>
                 </div>
             );
         case 'Complies':
             return (
                 <div className="hour-text">
                     <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymne || ''}</p>
+                    <p>{content.hymn || ''}</p>
                 </div>
             );
         default:

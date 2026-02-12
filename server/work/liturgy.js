@@ -13,7 +13,7 @@ function getLiturgicalTempusForDate(weekNumber) {
   if (weekNumber >= 0 && weekNumber <= 6) {
     return {    season: 'Temps ordinaire', number: weekNumber   };
   } else if (weekNumber >= 7 && weekNumber <= 12) {
-    return {season: 'Carême ', number: weekNumber - 6   };
+    return {    season: 'Carême ', number: weekNumber - 6   };
   } else if (weekNumber >= 13 && weekNumber <= 20) {
     return {    season: 'Pâques', number: weekNumber - 12   };
   } else {
@@ -22,7 +22,7 @@ function getLiturgicalTempusForDate(weekNumber) {
 }
 
 function dayOfYear(date) { 
-    Math.floor((date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) 
+    return Math.floor((date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) 
 }
 
 module.exports = { getLiturgyForDate }; 
