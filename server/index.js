@@ -76,7 +76,7 @@ app.get('/api/liturgy', (req, res) => {
 app.get('/api/hour/:hour', async (req, res) => {
   try {
     const hour = req.params.hour;
-    const lang = (req.query.lang || 'la');
+    const lang = req.query.lang;
     const date = req.query.date || Date.now();
 
     const result = await ordinary(date, hour, lang);

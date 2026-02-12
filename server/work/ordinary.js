@@ -1,6 +1,7 @@
 const db = require('../db');
 const data = require('../data');
 const { populate_with_texts } = require('./populate');
+const { getLiturgyForDate } = require('./liturgy');
 
 async function ordinary(date, hour, lang = 'la') {
 	// date: Date or date-string; hour: string like 'Sexte' or 'Matines'
@@ -57,7 +58,7 @@ async function ordinary(date, hour, lang = 'la') {
 	// 	if (hour_text) psalter = hour_text[lang] || hour_text.la;
 	// }
 
-	return await populate_with_texts({...psalter, ...commun });
+	return await populate_with_texts(lang, getLiturgyForDate(date).ML, {...psalter, ...commun });
 }
 
 module.exports = { ordinary };
