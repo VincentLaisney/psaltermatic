@@ -4,25 +4,11 @@ registerLocale('fr', fr);
 setDefaultLocale('fr');
 
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from 'react'
-import api from '../services/api'
 
-export default function Header({ title, subtitle, date }){
+export default function Header({ date }){
   const { currentDate, setCurrentDate } = date;
-  const [cookieStatus, setCookieStatus] = useState(null)
-  const [keyStatus, setKeyStatus] = useState(null)
-
-  async function setCookie() {
-    try {
-      const r = await api.get('/set-cookie')
-      setCookieStatus('ok')
-    } catch (e) {
-      setCookieStatus('error')
-    }
-  }
-
-  function saveKey() { setKeyStatus('disabled') }
-  function clearKey() { setKeyStatus('disabled') }
+  const title = "Abbaye Saint Joseph de Clairval"
+  const subtitle = "Psautier"
 
   return (
     <header className="card header" role="banner">
