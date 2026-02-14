@@ -28,10 +28,10 @@ function App() {
           <p style={{ fontWeight: 'bold', textAlign: 'center'}}>{currentDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           <p style={{ fontStyle: 'italic'}}>{liturgy.asText}</p>
           <nav className="menu">
-            {hours.map((h) => (
+            {hours.map((h, i) => (
               <>
-                {((h === 'Messe')  ? '— ' : null)}
-                <Link key={h} to={`/hour/${encodeURIComponent(h)}`} className="menu-item" style={{display:'inline-block', marginRight:8}}>
+                <Tiret key={`${i+20}`} key1={`tiret-${i}`} value={h} />
+                <Link key={i} to={`/hour/${encodeURIComponent(h)}`} className="menu-item" style={{display:'inline-block', marginRight:8}}>
                   {h}
                 </Link>
               </>
@@ -40,12 +40,18 @@ function App() {
         </section>
 
         <Routes>
-          <Route path="/hour/:hour" element={<HourProvider date={currentDate}/>} />
+          <Route path="/hour/:hour" element={<HourProvider date={currentDate} liturgy={liturgy}/>} />
           <Route path="/" element={null} />
         </Routes>
       </main>
     </Router>
   )
+}
+
+function Tiret({key1, value }) {
+  return <span key={key1} style={{ fontWeight: 'bold', marginRight: 4 }}>
+ {((value === 'Messe')  ? '— ' : '')}
+  </span>
 }
 
 function is_thursday(date) {

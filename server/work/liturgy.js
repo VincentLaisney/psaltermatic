@@ -5,7 +5,7 @@ function getLiturgyForDate(date0) {
   const {season, number} = getLiturgicalTempusForDate(weekNumber); 
   const ML_nr = weekNumber - 3;
   const ML = (ML_nr <= 3) ? `sept${ML_nr}` : `quad${ML_nr - 3}`;
-  return ({asText: `De ea. ${number}ᵉ semaine du ${season}`, ML: ML});
+  return ({asText: `De ea. ${number}ᵉ semaine du ${season}`, Matines: getMatinesForm(date), ML: ML});
 }
 
 function getLiturgicalTempusForDate(weekNumber) {
@@ -19,6 +19,16 @@ function getLiturgicalTempusForDate(weekNumber) {
   } else {
     return {    season: 'Temps ordinaire', number: weekNumber - 20   };
   }
+}
+
+function getMatinesForm(date) {
+  const dayOfWeek = date.getDay();
+  if (dayOfWeek !== 0) {
+    return 'simple';
+  } else  {
+    return '2noct';
+  }
+  // 3noct for the solemnities. TODO
 }
 
 function dayOfYear(date) { 
