@@ -1,6 +1,20 @@
+const { de } = require('date-fns/locale');
+const { getLiturgyForDate } = require('./liturgy');
+
 const { readFile } = require('fs').promises;
 
-async function populate_with_texts(lang, oratio, json) {
+async function populate_with_texts(lang, liturgy, json) {
+    const oratio = liturgy.ML;
+    if ('salve_regina' in json && 'ave_regina' in json) {
+        maria_ant = liturgy.maria_ant;
+        // console.log(`populate_with_texts: including Marian antiphon ${maria_ant} in result for language ${lang}`);
+        json["maria_ant"] = json[maria_ant];
+        delete json['salve_regina'];
+        delete json['ave_regina'];
+        delete json['regina_caeli'];
+        delete json['alma_redemp'];
+        // console.log(`populate_with_texts: json after adding maria_ant key:`, json);
+    }
     // Replace keys in json with corresponding texts from data
     const result = {};
     const promises = Object.keys(json).map(async (key) => {
