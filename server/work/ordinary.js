@@ -28,7 +28,9 @@ async function ordinary(date, hour, lang = 'la') {
 		'Complies': 'comp'
 	};
 
-	const name = `${day_to_feria[dateObj.getDay()]}_${hour_abbr[hour]}`;
+	let abbr_day = day_to_feria[dateObj.getDay()];
+	abbr_day = (hour === 'Complies') ? 'Dom' : abbr_day; // Compline of Sunday is repeated each day.
+	const name = `${abbr_day}_${hour_abbr[hour]}`;
     // console.log(`ordinary(): fetching content for ${name} (${lang}) and date ${dateObj.toISOString().split('T')[0]}`);
 
 	let psalter = null;
@@ -58,7 +60,7 @@ async function ordinary(date, hour, lang = 'la') {
 	// 	if (hour_text) psalter = hour_text[lang] || hour_text.la;
 	// }
 
-	return await populate_with_texts(lang, getLiturgyForDate(date).ML, {...psalter, ...commun });
+	return await populate_with_texts(lang, getLiturgyForDate(date), {...psalter, ...commun });
 }
 
 module.exports = { ordinary };
