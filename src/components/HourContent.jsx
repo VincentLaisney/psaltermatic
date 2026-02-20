@@ -82,6 +82,7 @@ function HourContent({ hour, lang, liturgy }) {
                     <p><Verses content={content.ps1 || ''} /></p>
                     <p><Verses content={content.ps2 || ''} /></p>
                     <p><Verses content={content.ps3 || ''} /></p>
+                    <p><Verses content={content.ps4 || ''} /></p>
                     <p><Verses content={content.antiphon || ''} /></p>
                     <p><Verses content={content.capit || ''} /></p>
                     <p><Verses content={content.verset || ''} /></p>
