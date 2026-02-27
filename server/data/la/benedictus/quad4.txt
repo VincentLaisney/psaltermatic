@@ -1,0 +1,1 @@
+Cum sublevásset óculos * Jesus, et vidísset máximam multitúdinem veniéntem ad se, dixit ad Philíppum: Unde emémus panes, ut mandúcent hi? Hoc autem dicébat tentans eum: ipse enim sciébat quid esset factúrus.

@@ -30,6 +30,33 @@ async function populate_with_texts(lang, liturgy, json) {
             result[key] = `[[${textKey}]]`;
         }
     });
+
+    if ('benedictus' in json) {
+        const path = `data/${lang}/benedictus/${liturgy.ML}.txt`;
+        promises.push((async () => {
+            try {
+                const text = await readFile(path, 'utf8');
+                result['benedictus'] = text;
+            } catch (err) {
+                console.warn(`populate_with_texts: failed to load benedictus for ${liturgy.ML} at path ${path}:`, err.message);
+                result['benedictus'] = `[[benedictus_${liturgy.ML}]]`;
+            }
+        })());
+    };
+
+    if ('magnificat' in json) {
+        const path = `data/${lang}/magnificat/${liturgy.ML}.txt`;
+        promises.push((async () => {
+            try {
+                const text = await readFile(path, 'utf8');
+                result['magnificat'] = text;
+            } catch (err) {
+                console.warn(`populate_with_texts: failed to load magnificat for ${liturgy.ML} at path ${path}:`, err.message);
+                result['magnificat'] = `[[magnificat_${liturgy.ML}]]`;
+            }
+        })());
+    };
+
     promises.push((async () => {
         const path = `data/${lang}/oratio/${oratio}.txt`;
         try {

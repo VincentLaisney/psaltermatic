@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HourContext } from '../pages/Hour.jsx'
-import Verses from './Verses.jsx'
+import Verses, { PsalmsWithSchema } from './Verses.jsx'
 import api from '../services/api'
 
 function HourContent({ hour, lang, liturgy }) {
@@ -99,9 +99,24 @@ function HourContent({ hour, lang, liturgy }) {
         case 'Vêpres':
             return (
                 <div className="hour-text">
-                    <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymn || ''}</p>
-               </div>
+                    <p><Verses content={content.initial_verset || ''} /></p>
+                    <PsalmsWithSchema content={content} />
+                    <p><Verses content={content.capit || ''} /></p>
+                    <p><Verses content={content.respons || ''} /></p>
+                    <p><Verses content={content.hymn || ''} /></p>
+                    <p><Verses content={content.verset || ''} /></p>
+                    <p><Verses content={content.magnificat || ''} /></p>
+                    <p><Verses content={content.cant_magnificat || ''} /></p>
+                    <p><Verses content={content.magnificat || ''} /></p>
+                    <p><Verses content={content.kyrie || ''} /></p>
+                    <p><Verses content={content.pater || ''} /></p>
+                    <p><Verses content={content.dominus || ''} /></p>
+                    <p><Verses content={content.oratio || ''} /></p>
+                    <p><Verses content={content.dominus || ''} /></p>
+                    <p><Verses content={content.benedicamus || ''} /></p>
+                    <p><Verses content={content.fidelium_animae || ''} /></p>
+                    <p><Verses content={content.divinum || ''} /></p>
+              </div>
             );
         case 'Complies':
             return (
@@ -139,39 +154,6 @@ function HourContent({ hour, lang, liturgy }) {
 }
 
 
-function hour_body(hour) {
-  switch (hour) {
-    case 'Sexte':
-      return (
-          <div className="hour-text">
-            <p><Verses content={initial_verset} /></p>
-            <p><Verses content={hymne_sexte} /></p>
-            <p>{ant_sexte_dom}</p>
-            <p><Verses content={psaumes[Dom_sexte.Ps1]} /></p>
-            <p><Verses content={psaumes[Dom_sexte.Ps2]} /></p>
-            <p><Verses content={psaumes[Dom_sexte.Ps3]} /></p>
-            <p>{ant_sexte_dom}</p>
-            <p>{Dom_sexte.capit}</p>
-            <p>{Dom_sexte.vers}</p>
-            <p>{kyrie}</p>
-            <p>{pater_silent}</p>
-            <p>{dominus_vobiscum}</p>
-            <p>{oratio}</p>
-            <p>{dominus_vobiscum}</p>
-            <p>{benedicamus}</p>
-            <p>{fidelium_animae}</p>
-            <p><Verses content={divinum} /></p>
-          </div> 
-      ) 
-          ;
-      
-        default:
-          return (
-          <p>Texte de l'heure pour <strong>{hour}</strong>.</p>
-          )
-          ;
-  }
-}
 
 function hour_body_french(hour) {
   switch (hour) {
