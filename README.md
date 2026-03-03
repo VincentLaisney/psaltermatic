@@ -2,8 +2,24 @@
 
 This repository is intended to generate a website and two apps, an Android and an iPhone ones, to give the text of the choral prayer of the Abbaye Saint Joseph de Clairval (Flavigy, France).
 
-It is still at the beginning and very rudimentary.
+It is still at the beginning and very rudimentary: many parts of the officium are missising and the temporal/sanctoral of the liturgical year is not yet implemented.
 
+## Installation
+
+To run the development version:
+
+- go to the server directory and follow the instruction of the Readme file to launch the backend,
+- launch the Vite server either locally:
+
+```bash
+VITE_API_KEY=MY_SECRET npm run dev
+```
+
+either on the local network:
+
+```bash
+VITE_API_KEY=MY_SECRET npm run dev
+```
 
 #### MIT License
 
