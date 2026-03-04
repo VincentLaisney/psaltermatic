@@ -1,12 +1,10 @@
-const { de } = require('date-fns/locale');
-const { getLiturgyForDate } = require('./liturgy');
-
+/* eslint-disable no-undef */
 const { readFile } = require('fs').promises;
 
 async function populate_with_texts(lang, liturgy, json) {
     const oratio = liturgy.ML;
     if ('salve_regina' in json && 'ave_regina' in json) {
-        maria_ant = liturgy.maria_ant;
+        const maria_ant = liturgy.maria_ant;
         // console.log(`populate_with_texts: including Marian antiphon ${maria_ant} in result for language ${lang}`);
         json["maria_ant"] = json[maria_ant];
         delete json['salve_regina'];
@@ -19,6 +17,11 @@ async function populate_with_texts(lang, liturgy, json) {
     const result = {};
     const promises = Object.keys(json).map(async (key) => {
         const textKey = json[key];
+        if (['schema'].includes(key)) {
+            // console.log(`populate_with_texts: skipping text loading for key ${key} with value ${textKey} as it's a special key.`);
+            result[key] = textKey;
+            return;
+        }
         let path = `data/${lang}`;
         textKey.split('_').forEach(k => path += `/${k}`);
         path += '.txt';
@@ -31,7 +34,7 @@ async function populate_with_texts(lang, liturgy, json) {
         }
     });
 
-    if ('benedictus' in json) {
+    if ('benedictus' in json && json['benedictus'] === 'ant_antiphon_129') { // Antiphona propria
         const path = `data/${lang}/benedictus/${liturgy.ML}.txt`;
         promises.push((async () => {
             try {
@@ -44,7 +47,7 @@ async function populate_with_texts(lang, liturgy, json) {
         })());
     };
 
-    if ('magnificat' in json) {
+    if ('magnificat' in json && json['magnificat'] === 'ant_antiphon_129') { // Antiphona propria
         const path = `data/${lang}/magnificat/${liturgy.ML}.txt`;
         promises.push((async () => {
             try {
