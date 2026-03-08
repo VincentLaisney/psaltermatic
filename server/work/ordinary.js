@@ -1,5 +1,5 @@
+/* eslint-disable no-undef */
 const db = require('../db');
-const data = require('../data');
 const { populate_with_texts } = require('./populate');
 const { getLiturgyForDate } = require('./liturgy');
 
@@ -27,6 +27,20 @@ async function ordinary(date, hour, lang = 'la') {
 		'Vêpres': 'vep',
 		'Complies': 'comp'
 	};
+
+	const liturgy = getLiturgyForDate(date);
+
+	if (hour === 'Messe') {
+		if (dateObj.getDay() === 0) { // Sunday
+			return await populate_with_texts(lang, liturgy, {reading: `${liturgy.temporal}_${liturgy.year_letter}_1`, reading_2: `${liturgy.temporal}_${liturgy.year_letter}_2`, gospel: `${liturgy.temporal}_${liturgy.year_letter}_ev`});
+		} else if (liturgy.temporal.startsWith('pa_')) { // per annum
+			const even_num = dateObj.getFullYear() % 2 === 0 ? 2 : 1; // alternate between the two sets of readings each year
+			return await populate_with_texts(lang, liturgy, {reading: `${liturgy.temporal}_${even_num}_1`, reading_2: `${liturgy.temporal}_${even_num}_2`, gospel: `${liturgy.temporal}_${even_num}_ev`});
+		} else {
+			return await populate_with_texts(lang, liturgy, {reading: `${liturgy.temporal}_1`, reading_2: '`${liturgy.temporal}_2`', gospel: `${liturgy.temporal}_ev`});
+		}
+	}
+
 
 	let abbr_day = day_to_feria[dateObj.getDay()];
 	abbr_day = (hour === 'Complies') ? 'Dom' : abbr_day; // Compline of Sunday is repeated each day.
@@ -60,7 +74,8 @@ async function ordinary(date, hour, lang = 'la') {
 	// 	if (hour_text) psalter = hour_text[lang] || hour_text.la;
 	// }
 
-	return await populate_with_texts(lang, getLiturgyForDate(date), {...psalter, ...commun });
+	return await populate_with_texts(lang, liturgy, {...psalter, ...commun });
 }
 
+// eslint-disable-next-line no-undef
 module.exports = { ordinary };

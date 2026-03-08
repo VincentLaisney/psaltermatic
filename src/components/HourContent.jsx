@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HourContext } from '../pages/Hour.jsx'
-import Verses, { PsalmsWithSchema } from './Verses.jsx'
+import Verses, { PsalmsWithSchema, TextWithRef } from './Verses.jsx'
 import api from '../services/api'
 
 function HourContent({ hour, lang, liturgy }) {
@@ -12,6 +12,7 @@ function HourContent({ hour, lang, liturgy }) {
     
     useEffect(() => {
     if (!hour) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     setError(null)
     api.get(`/hour/${encodeURIComponent(hour)}`, {
@@ -30,7 +31,6 @@ function HourContent({ hour, lang, liturgy }) {
 
     if (loading) return <p>Loading…</p>
     if (error) return <p style={{ color: 'red' }}>{error}</p>
-    if (!content) return hour_body_french(hour)
 
     switch (hour) {
         case 'Matines-Laudes':
@@ -64,6 +64,7 @@ function HourContent({ hour, lang, liturgy }) {
                         </div>
                     );
             };
+            break;
         case 'Laudes':
              return (
                 <div className="hour-text">
@@ -146,6 +147,14 @@ function HourContent({ hour, lang, liturgy }) {
                     <p><Verses content={content.maria_ant || ''} /></p>
                  </div>
             );
+            case 'Messe':
+                return (
+                    <div className="hour-text">
+                        <p><TextWithRef content={content.reading || ''} /></p>
+                        <p><TextWithRef content={content.reading_2 || ''} /></p>
+                        <p><TextWithRef content={content.gospel || ''} /></p>
+                    </div>
+                );
         default:
             return (
                 <p>Texte de l'heure pour <strong>{hour}</strong>.</p>
@@ -153,37 +162,5 @@ function HourContent({ hour, lang, liturgy }) {
     }
 }
 
-
-
-function hour_body_french(hour) {
-  switch (hour) {
-    case 'Sexte':
-      return (
-        <div className="hour-text">
-          <p>{initial_verset_fr}</p>
-          <p>{hymne_sexte_fr}</p>
-          <p>{ant_sexte_dom_fr}</p>
-          <p>{psaumes_fr[Dom_sexte_fr.Ps1]}</p>
-          <p>{psaumes_fr[Dom_sexte_fr.Ps2]}</p>
-          <p>{psaumes_fr[Dom_sexte_fr.Ps3]}</p>
-          <p>{ant_sexte_dom_fr}</p>
-          <p>{Dom_sexte_fr.capit}</p>
-          <p>{Dom_sexte_fr.vers}</p>
-          <p>{kyrie_fr}</p>
-          <p>{pater_silent_fr}</p>
-          <p>{dominus_vobiscum_fr}</p>
-          <p>{oratio_fr}</p>
-          <p>{dominus_vobiscum_fr}</p>
-          <p>{benedicamus_fr}</p>
-          <p>{fidelium_animae_fr}</p>
-          <p>{divinum_fr}</p>
-        </div>
-      )
-    default:
-      return (
-        <p>Texte français de l'heure pour <strong>{hour}</strong>.</p>
-      )
-  }
-}
 
 export default HourContent;

@@ -13,6 +13,11 @@ function Verses({ content }) {
     }
 }
 
+function TextWithRef({ content }) {
+    // TODO: provisory
+    return <Verses content={content} />;
+}
+
 function PsalmsWithSchema({ content }) {
     const schema = content.schema || 'ant1_ps1_ant1_ant2_ps2_ant2_ant3_ps3_ant3_ant4_ps4_ant4';
     // console.log('PsalmsWithSchema: rendering with schema', schema);
@@ -26,5 +31,5 @@ function PsalmsWithSchema({ content }) {
     }</>);
 }            
 
-export { PsalmsWithSchema } ;
+export { PsalmsWithSchema, TextWithRef }; ;
 export default Verses ;
