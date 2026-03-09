@@ -144,9 +144,9 @@ function getMariaAntiphonForDate(date, tempo) {
   const dateObj = new Date(date);
   if (dateObj >= new Date(dateObj.getFullYear(), 2 - 1, 2) && dateObj < getEasterDate(dateObj.getFullYear())) {
     return 'ave_regina';
-  } else if (tempo.startsWith('tp_')) {
+  } else if (tempo.startsWith('tp_') || tempo === 'pa_9_0') { // Add Penstecost
     return 'regina_caeli';
-  } else if (tempo.startsWith('adv_')) {
+  } else if (dateObj >= getAdventStart(dateObj.getFullYear()) || dateObj < new Date(dateObj.getFullYear(), 2 - 1, 2)) {
     return 'alma_redemp';
   } else {
     return 'salve_regina';
