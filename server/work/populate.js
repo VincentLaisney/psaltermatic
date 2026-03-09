@@ -32,7 +32,10 @@ async function populate_with_texts(lang, liturgy, json) {
             path += `${textKey}.txt`;
             try {
                 const text = await readFile(path, 'utf8');
-                result[key] = text.replaceAll("~", " "); // replace non-breaking spaces
+                result[key] = { text: text.replaceAll("~", " ") }; // replace non-breaking spaces
+                path = path.replace(/\.txt$/, '.ref');
+                const refText = await readFile(path, 'utf8');
+                result[key].ref = refText.trim();
             } catch (err) {
                 if (err.code === 'ENOENT' && key === 'reading_2') {
                     // If the second reading is not found, it's not a critical error, we can just ignore it.
@@ -40,7 +43,7 @@ async function populate_with_texts(lang, liturgy, json) {
                     return;
                 }
                 console.warn(`populate_with_texts: failed to load lecture text for key ${key} with value ${textKey} at path ${path}:`, err.message);
-                result[key] = `[[${textKey}]]`;
+                result[key] = { text: `[[${textKey}]]`, ref: "" };
             }
             return;
         }

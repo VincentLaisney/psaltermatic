@@ -14,8 +14,20 @@ function Verses({ content }) {
 }
 
 function TextWithRef({ content }) {
-    // TODO: provisory
-    return <Verses content={content} />;
+    if (!content) return null;
+    if (typeof content === 'string') {
+        return <Verses content={content} />;
+    } else if (typeof content === 'object' && content.text) {
+        return (
+            <span>
+                {content.ref && <span style={{ display: 'block', marginTop: '0.5em', textAlign: 'right', fontStyle: 'italic' }}>{content.ref}</span>}
+                <p><Verses content={content.text} /></p>
+            </span>
+        );
+    } else {
+        console.warn('TextWithRef: unexpected content format', content);
+        return null;
+    }
 }
 
 function PsalmsWithSchema({ content }) {
