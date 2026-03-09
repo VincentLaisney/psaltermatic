@@ -4,12 +4,13 @@ function getLiturgyForDate(date0) {
   const {season, number} = getLiturgicalTempusForDate(weekNumber, date); 
   const ML_nr = weekNumber - 3;
   const ML = (ML_nr <= 3) ? `sept${ML_nr}` : `quad${ML_nr - 3}`;
-  const maria_ant = getMariaAntiphonForDate(date, season);
+  const tempo = get_tempo(date);
+  const maria_ant = getMariaAntiphonForDate(date, tempo.tempo);
   const notable_dates = {easter: getEasterDate(date.getFullYear()), advent: getAdventStart(date.getFullYear()), lent: new Date(getEasterDate(date.getFullYear()).getTime() - 46 * 24 * 60 * 60 * 1000), pentecost: new Date(getEasterDate(date.getFullYear()).getTime() + 49 * 24 * 60 * 60 * 1000)};
   
   return ({asText: `De ea. ${number}ᵉ semaine du ${season}`, Matines: getMatinesForm(date), 
-      ML: ML, maria_ant: maria_ant, notable_dates: notable_dates, temporal: get_tempo(date).tempo, 
-      prov_test: get_tempo(date).prov_test,
+      ML: ML, maria_ant: maria_ant, notable_dates: notable_dates, temporal: tempo.tempo, 
+      prov_test: tempo.prov_test,
       year_letter: getYearLetter(date.getFullYear())});
 }
 
@@ -138,13 +139,14 @@ function get_tempo(date) {
     return {tempo, prov_test};
 }
 
-function getMariaAntiphonForDate(date, season) {
+function getMariaAntiphonForDate(date, tempo) {
   // console.log(`getMariaAntiphonForDate(): determining Marian antiphon for season ${season} and date ${date.toISOString().split('T')[0]}`);
-  if (season === 'Carême') {
+  const dateObj = new Date(date);
+  if (dateObj >= new Date(dateObj.getFullYear(), 2 - 1, 2) && dateObj < getEasterDate(dateObj.getFullYear())) {
     return 'ave_regina';
-  } else if (season === 'Pâques') {
+  } else if (tempo.startsWith('tp_')) {
     return 'regina_caeli';
-  } else if (season === 'Avent') {
+  } else if (tempo.startsWith('adv_')) {
     return 'alma_redemp';
   } else {
     return 'salve_regina';
