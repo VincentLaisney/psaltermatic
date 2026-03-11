@@ -68,8 +68,24 @@ function HourContent({ hour, lang, liturgy }) {
         case 'Laudes':
              return (
                 <div className="hour-text">
-                    <p>{content.initial_verset || ''}</p>
-                    <p>{content.hymn || ''}</p>
+                    <p><Verses content={content.initial_verset || ''} /></p>
+                    <PsalmsWithSchema content={content} 
+                    defaultSchema={'ant1_ps1_ant1_ant2_ps2_ant2_ant3_cant_ant3_ant4_ps4_ant4'} />
+                    <p><Verses content={content.capit || ''} /></p>
+                    <p><Verses content={content.respons || ''} /></p>
+                    <p><Verses content={content.hymn || ''} /></p>
+                    <p><Verses content={content.verset || ''} /></p>
+                    <p><Verses content={content.benedictus || ''} /></p>
+                    <p><Verses content={content.cant_benedictus || ''} /></p>
+                    <p><Verses content={content.benedictus || ''} /></p>
+                    <p><Verses content={content.kyrie || ''} /></p>
+                    <p><Verses content={content.pater || ''} /></p>
+                    <p><Verses content={content.dominus || ''} /></p>
+                    <p><Verses content={content.oratio || ''} /></p>
+                    <p><Verses content={content.dominus || ''} /></p>
+                    <p><Verses content={content.benedicamus || ''} /></p>
+                    <p><Verses content={content.fidelium_animae || ''} /></p>
+                    <p><Verses content={content.divinum || ''} /></p>
                 </div>
             );
         case 'Tierce':
