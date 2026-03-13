@@ -68,11 +68,6 @@ async function ordinary(date, hour, lang = 'la') {
 		console.warn('ordinary(): DB lookup failed for commun', e.message);
 	}
 
-	// Fallback to in-memory data if DB not returning
-	// if (!psalter) {
-	// 	const hour_text = data[name];
-	// 	if (hour_text) psalter = hour_text[lang] || hour_text.la;
-	// }
 
 	return await populate_with_texts(lang, liturgy, {...psalter, ...commun });
 }

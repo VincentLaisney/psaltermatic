@@ -3,6 +3,7 @@ const { readFile } = require('fs').promises;
 
 async function populate_with_texts(lang, liturgy, json) {
     const oratio = liturgy.ML;
+    const dateObj = new Date(liturgy.date);
     if ('salve_regina' in json && 'ave_regina' in json) {
         const maria_ant = liturgy.maria_ant;
         // console.log(`populate_with_texts: including Marian antiphon ${maria_ant} in result for language ${lang}`);
@@ -13,7 +14,34 @@ async function populate_with_texts(lang, liturgy, json) {
         delete json['alma_redemp'];
         // console.log(`populate_with_texts: json after adding maria_ant key:`, json);
     }
-    // Replace keys in json with corresponding texts from data
+
+	if ('hymn-hiem' in json && 'hymn-aest' in json) {
+		if (dateObj.getMonth() >= 9 || dateObj < liturgy.notable_dates.easter) { // From October to Easter
+			json.hymn = json['hymn-hiem'];
+		} else {
+			json.hymn = json['hymn-aest'];
+		}
+        delete json['hymn-hiem'];
+        delete json['hymn-aest'];
+		// console.log(`ordinary(): selected hymn for Dom_laud based on date ${dateObj.toISOString().split('T')[0]}: ${json.hymn}`);
+	}
+
+    if ('cant-fer' in json && 'cant-fest' in json) {
+        if (liturgy.temporal.startsWith('cendres_') || liturgy.temporal.startsWith('qua_') || liturgy.temporal.startsWith('adv_')) { 
+            json.cant = json['cant-fer'];
+            json.ant3 = json['ant3-fer'];
+        } else {
+            json.cant = json['cant-fest'];
+            json.ant3 = json['ant3-fest'];
+        }
+        delete json['cant-fer'];
+        delete json['cant-fest'];
+        delete json['ant3-fer'];
+        delete json['ant3-fest'];
+        // console.log(`ordinary(): selected canticle for Laudes based on temporal ${liturgy.temporal}: ${json.cant}`);
+    }
+    
+            // Replace keys in json with corresponding texts from data
     const result = {};
     const promises = Object.keys(json).map(async (key) => {
         const textKey = json[key];

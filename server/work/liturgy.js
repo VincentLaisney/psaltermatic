@@ -8,10 +8,14 @@ function getLiturgyForDate(date0) {
   const maria_ant = getMariaAntiphonForDate(date, tempo.tempo);
   const notable_dates = {easter: getEasterDate(date.getFullYear()), advent: getAdventStart(date.getFullYear()), lent: new Date(getEasterDate(date.getFullYear()).getTime() - 46 * 24 * 60 * 60 * 1000), pentecost: new Date(getEasterDate(date.getFullYear()).getTime() + 49 * 24 * 60 * 60 * 1000)};
   
-  return ({asText: `De ea. ${number}ᵉ semaine du ${season}`, Matines: getMatinesForm(date), 
-      ML: ML, maria_ant: maria_ant, notable_dates: notable_dates, temporal: tempo.tempo, 
-      prov_test: tempo.prov_test,
-      year_letter: getYearLetter(date.getFullYear())});
+  return ({asText: `De ea. ${number}ᵉ semaine du ${season}`, 
+    date: date0,
+    Matines: getMatinesForm(date), 
+    ML: ML, maria_ant: maria_ant, 
+    notable_dates: notable_dates, 
+    temporal: tempo.tempo, 
+    prov_test: tempo.prov_test,
+    year_letter: getYearLetter(date.getFullYear())});
 }
 
 function getLiturgicalTempusForDate(weekNumber, date) {
