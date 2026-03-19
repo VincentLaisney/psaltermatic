@@ -40,6 +40,10 @@ async function populate_with_texts(lang, liturgy, json) {
         delete json['ant3-fest'];
         // console.log(`ordinary(): selected canticle for Laudes based on temporal ${liturgy.temporal}: ${json.cant}`);
     }
+
+    if ('ps1' in json && json.ps1 === 'ps_50' && 'ant1' in json) { // Sabbato ad laudes
+        json['ant1'] = getSaturdayFirstAntiphon(liturgy.temporal);
+    }
     
             // Replace keys in json with corresponding texts from data
     const result = {};
@@ -129,5 +133,39 @@ async function populate_with_texts(lang, liturgy, json) {
     // console.log('populate_with_texts: loaded texts, returning result object:', result);
     return result;
 }
+
+function getSaturdayFirstAntiphon(temporal) {
+    // voir le tableau, Psautier p. 458
+    let antNum = 1; // default for sat. after ash-wedn.
+    const temp = temporal.split('_');
+    if (temp[0] === 'adv') { 
+        antNum = parseInt(temp[1]);
+    } else if (temp[0] === 'noel') {
+        antNum = parseInt(temp[2]) - 3;  // 2 or 3 to 5 or 6 
+    } else if (temp[0] === 'qua') {
+        antNum = parseInt(temp[1]) + 1;
+    } else if (temp[0] === 'pa') {
+        antNum = ( (parseInt(temp[1]) - 1) % 6 ) + 1
+    } else {
+        antNum = 1;
+    }
+    // console.log(`getSaturdayFirstAntiphon(): temporal: ${temporal}; temp: ${temp} antNum: ${antNum}.`)
+    switch (antNum) {
+        case 1:
+            return "ant_antiphon_38"; // Miserere
+        case 2:
+            return "ant_antiphon_45-2"; // Dele Domine
+        case 3:
+            return "ant_antiphon_52-1"; // Amplius
+        case 4:
+            return "ant_antiphon_58-2"; // Tibi soli
+        case 5:
+            return "ant_antiphon_66-1"; // Spiritu pricipali
+        case 6:
+        default:
+            return "ant_antiphon_73-2"; // Benigne fac
+    }
+}
+
 
 module.exports = { populate_with_texts };
