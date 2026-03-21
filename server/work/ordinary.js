@@ -67,7 +67,19 @@ async function ordinary(date, hour, lang = 'la') {
 	} catch (e) {
 		console.warn('ordinary(): DB lookup failed for commun', e.message);
 	}
-
+	// Add oratio
+	const liturgical_day = liturgy.ML;
+	let dies = liturgy.temporal;
+	const dies_p = dies.split('_');
+	if (liturgical_day.startsWith('cendre') || liturgical_day.startsWith('qua')) {
+		psalter.oratio = `${dies_p[0] === 'qua' ? 'quad' : 'sept'}${dies_p[1]}${dies_p[2] !== '0' ? `-${dies_p[2]}` : ''}`;
+		// console.log(`ordinary() add oratio: ${psalter.oratio}`)
+		if (hour === 'Vêpres') {
+			psalter.oratio = `${psalter.oratio}-V`;
+		}
+	} else {
+		psalter.oratio = liturgical_day; // provisory. Put the preceding Sunday's
+	}
 
 	return await populate_with_texts(lang, liturgy, {...psalter, ...commun });
 }

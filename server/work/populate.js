@@ -2,7 +2,6 @@
 const { readFile } = require('fs').promises;
 
 async function populate_with_texts(lang, liturgy, json) {
-    const oratio = liturgy.ML;
     const dateObj = new Date(liturgy.date);
     if ('salve_regina' in json && 'ave_regina' in json) {
         const maria_ant = liturgy.maria_ant;
@@ -49,7 +48,7 @@ async function populate_with_texts(lang, liturgy, json) {
     const result = {};
     const promises = Object.keys(json).map(async (key) => {
         const textKey = json[key];
-        if (['schema'].includes(key)) {
+        if (['schema', 'oratio'].includes(key)) {
             // console.log(`populate_with_texts: skipping text loading for key ${key} with value ${textKey} as it's a special key.`);
             result[key] = textKey;
             return;
@@ -118,16 +117,19 @@ async function populate_with_texts(lang, liturgy, json) {
         })());
     };
 
-    promises.push((async () => {
-        const path = `data/${lang}/oratio/${oratio}.txt`;
-        try {
-            const text = await readFile(path, 'utf8');
-            result.oratio = (lang === 'la' ? "Orémus. " : "Prions. ") + text;
-        } catch (err) {
-            console.warn(`populate_with_texts: failed to load oratio for ${oratio} at path ${path}:`, err.message);
-            result.oratio = `[[oratio_${oratio}]]`;
-        }
-    })());
+    if ('oratio' in json) {
+        const oratio = json.oratio;
+        promises.push((async () => {
+            const path = `data/${lang}/oratio/${oratio}.txt`;
+            try {
+                const text = await readFile(path, 'utf8');
+                result.oratio = (lang === 'la' ? "Orémus. " : "Prions. ") + text;
+            } catch (err) {
+                console.warn(`populate_with_texts: failed to load oratio for ${oratio} at path ${path}:`, err.message);
+                result.oratio = `[[oratio_${oratio}]]`;
+            }
+        })())
+    };
 
     await Promise.all(promises);
     // console.log('populate_with_texts: loaded texts, returning result object:', result);
