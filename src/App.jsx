@@ -43,8 +43,8 @@ function App() {
                   ))}
                 </nav>
 
-                <Link to="/settings" className="menu-item" title="Préférences" style={{ marginLeft: 16, textDecoration: 'none' }}>
-                  <span style={{ fontSize: 18 }}>⚙️</span>
+                <Link to="/settings" className="menu-item" title="Préférences" style={{ marginLeft: 16 }}>
+                  Préférences&nbsp;<span style={{ fontSize: 18, textDecoration: 'none' }}>⚙️</span>
                 </Link>
               </div>
             </section>

@@ -1,3 +1,1 @@
-@:Ant 2_
-(sed rubrica cisterciensis)
-@:Ant 2C
+Simon, dormis? * non potuísti una hora vigiláre mecum?

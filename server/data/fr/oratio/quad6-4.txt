@@ -4,8 +4,6 @@ $Pater noster
 !à voix un peu plus haute
 _
 &psalm(50)
-(sed rubrica 1955 aut rubrica 1960 aut rubrica monastica omittitur)
-@:Oratio Matutinum
-
-[Prelude Vespera] (rubrica 1955 aut rubrica 1960)
-!Les vêpres ne se disent pas aujourd'hui, pour ceux qui assistent à la messe vespérale de la Cène du Seigneur. 
+v. Daignez jeter un regard favorable, Seigneur, sur Votre famille que voici et pour laquelle Notre Seigneur Jésus-Christ n’a pas hésité à Se laisser livrer aux mains des bourreaux et à subir le supplice de la croix,
+!Et c'est à voix basse qu'on dit la conclusion
+$Qui tecum
