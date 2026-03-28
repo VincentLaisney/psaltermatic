@@ -1,0 +1,1 @@
+Cum appropinquáret * Dóminus Jerúsalem videns civitátem flevit super illam, et dixit: Quia si cognovísses et tu, quia vénient dies in te, et circúmdabunt te inimíci tui vallo et circúmdabunt te et coangustábunt te úndique et ad terram prostérnent te: eo quod non cognovísti tempus visitatiónis tuæ, allelúja.
