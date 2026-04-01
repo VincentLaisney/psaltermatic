@@ -4,9 +4,13 @@ import App from './App.jsx'
 
 // Initialize persisted hour font (if any) before rendering
 try {
-  const saved = localStorage.getItem('psaltermatic:hourFont')
-  if (saved) {
-    document.documentElement.style.setProperty('--hour-font', saved)
+  const savedFont = localStorage.getItem('psaltermatic:hourFont')
+  if (savedFont) {
+    document.documentElement.style.setProperty('--hour-font', savedFont)
+  }
+  const savedFontSize = localStorage.getItem('psaltermatic:hourFontSize')
+  if (savedFontSize) {
+    document.documentElement.style.setProperty('--hour-font-size', savedFontSize)
   }
 // eslint-disable-next-line no-unused-vars
 } catch (e) {
