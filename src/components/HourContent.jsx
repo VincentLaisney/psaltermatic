@@ -96,10 +96,10 @@ function HourContent({ hour, lang, liturgy }) {
                     <p><Verses content={content.initial_verset || ''} /></p>
                     <p><Verses content={content.hymn || ''} /></p>
                     <p><Verses content={content.antiphon || ''} /></p>
-                    <p><Verses content={content.ps1 || ''} /></p>
-                    <p><Verses content={content.ps2 || ''} /></p>
-                    <p><Verses content={content.ps3 || ''} /></p>
-                    <p><Verses content={content.ps4 || ''} /></p>
+                    <p className='lettrine'><Verses content={content.ps1 || ''} /></p>
+                    <p className='lettrine'><Verses content={content.ps2 || ''} /></p>
+                    <p className='lettrine'><Verses content={content.ps3 || ''} /></p>
+                    <p className='lettrine'><Verses content={content.ps4 || ''} /></p>
                     <p><Verses content={content.antiphon || ''} /></p>
                     <p><Verses content={content.capit || ''} /></p>
                     <p><Verses content={content.verset || ''} /></p>
@@ -147,9 +147,9 @@ function HourContent({ hour, lang, liturgy }) {
                     <p><Verses content={content.indulgentiam || ''} /></p>
                     <p><Verses content={content.convertere || ''} /></p>
                     <p><Verses content={content.initial_verset || ''} /></p>
-                    <p><Verses content={content.ps1 || ''} /></p>
-                    <p><Verses content={content.ps2 || ''} /></p>
-                    <p><Verses content={content.ps3 || ''} /></p>
+                    <p className='lettrine'><Verses content={content.ps1 || ''} /></p>
+                    <p className='lettrine'><Verses content={content.ps2 || ''} /></p>
+                    <p className='lettrine'><Verses content={content.ps3 || ''} /></p>
                     <p><Verses content={content.hymn || ''} /></p>
                     <p><Verses content={content.capit || ''} /></p>
                     <p><Verses content={content.verset || ''} /></p>

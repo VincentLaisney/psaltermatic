@@ -36,9 +36,19 @@ function PsalmsWithSchema({ content, defaultSchema }) {
     return (<>{
         schema.split('_').map((part, index) => {
             // console.log(`PsalmsWithSchema: processing part ${part} of schema. Content for this part:`, content[part]);
-            return (
-                <p key={index}><Verses content={content[part] || ''} /></p>
-            )
+            if (part.startsWith('ant')) {
+                return (
+                    <p key={index}><Verses content={content[part] || ''} /></p>
+                )
+            } else if (part.startsWith('ps') || part.startsWith('cant') || part.startsWith('respons')) {
+                return (
+                    <p key={index} className='lettrine'><Verses content={content[part] || ''} /></p>
+                )
+            } else {
+                console.warn(`PsalmsWithSchema: unknown schema part ${part}`);
+                return null;
+            }
+        
         })
     }</>);
 }            
