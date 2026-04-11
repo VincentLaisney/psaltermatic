@@ -93,20 +93,20 @@ function HourContent({ hour, lang, liturgy }) {
         case 'None':
             return (
                 <div className="hour-text">
-                    <p><Verses content={content.initial_verset || ''} /></p>
-                    <p><Verses content={content.hymn || ''} /></p>
+                    <p className='lettrine'><Verses content={content.initial_verset || ''} /></p>
+                    <p className='lettrine'><Verses content={content.hymn || ''} /></p>
                     <p><Verses content={content.antiphon || ''} /></p>
                     <p className='lettrine'><Verses content={content.ps1 || ''} /></p>
                     <p className='lettrine'><Verses content={content.ps2 || ''} /></p>
                     <p className='lettrine'><Verses content={content.ps3 || ''} /></p>
                     <p className='lettrine'><Verses content={content.ps4 || ''} /></p>
                     <p><Verses content={content.antiphon || ''} /></p>
-                    <p><Verses content={content.capit || ''} /></p>
+                    <p className='lettrine'><Verses content={content.capit || ''} /></p>
                     <p><Verses content={content.verset || ''} /></p>
                     <p><Verses content={content.kyrie || ''} /></p>
-                    <p><Verses content={content.pater_silent || ''} /></p>
+                    <p className='lettrine'><Verses content={content.pater_silent || ''} /></p>
                     <p><Verses content={content.dominus || ''} /></p>
-                    <p><Verses content={content.oratio || ''} /></p>
+                    <p className='lettrine'><Verses content={content.oratio || ''} /></p>
                     <p><Verses content={content.dominus || ''} /></p>
                     <p><Verses content={content.benedicamus || ''} /></p>
                     <p><Verses content={content.fidelium_animae || ''} /></p>

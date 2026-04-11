@@ -6,7 +6,7 @@
   --card: #ffffff;
   --accent: #2563eb;
   --text: #0f172a;
-  --red-lit: brown;
+  --red-lit: #a60000;
 }
 html,body,#root{height:100%;}
 body{
@@ -48,8 +48,8 @@ body{
   font-size:13px;
 }
 .hour-text p::first-letter {
-  font-size: 2rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 400;
   color: var(--red-lit);
 }
 .hour-text  p.lettrine::first-letter {
@@ -57,11 +57,11 @@ body{
   /* background-color: black; */
   /* border-radius: 2px; */
   /* box-shadow: 3px 3px 0 red; */
-  font-size: 270%;
-  font-weight: bold;
+  font-size: 310%;
+  font-weight: 500;
   /* padding: 6px 3px; */
   line-height: 1;
-  margin-top: 0.05em;
+  margin-top: 0.0em;
   margin-right: 6px;
   float: left;
 }
