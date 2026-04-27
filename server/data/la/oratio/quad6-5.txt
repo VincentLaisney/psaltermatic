@@ -1,9 +1,12 @@
 v. Christus factus est pro nobis obédiens usque ad mortem, mortem autem crucis.
 !secreto
-$Pater noster
+v. Pater noster, qui es in cælis, sanctificétur nomen tuum: advéniat regnum tuum: fiat volúntas tua, sicut in cælo et in terra. Panem nostrum cotidiánum da nobis hódie: et dimítte nobis débita nostra, sicut et nos dimíttimus debitóribus nostris: et ne nos indúcas in tentatiónem: sed líbera nos a malo. Amen.
+
+
 !aliquantulum altius
 _
 &psalm(50)
 v. Réspice, quǽsumus, Dómine, super hanc famíliam tuam, pro qua Dóminus noster Jesus Christus non dubitávit mánibus tradi nocéntium, et crucis subíre torméntum:
 !Et sub silentio concluditur
-$Qui tecum
+Qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.
+R. Amen.
