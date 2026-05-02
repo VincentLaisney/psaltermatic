@@ -1,5 +1,7 @@
 import { useParams } from 'react-router-dom'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 import HourContent from '../components/HourContent.jsx'
 
 const HourContext = React.createContext();
@@ -16,11 +18,12 @@ export default function HourProvider({date, liturgy}) {
 
 function Hour({hour, liturgy}) {
   const name = hour ? decodeURIComponent(hour) : ''
+  const date = React.useContext(HourContext)
   const [showFr, setShowFr] = useState(() => {
     try {
       const v = localStorage.getItem('psaltermatic.showFr');
       return v === null ? true : v === '1';
-    } catch (e) {
+    } catch {
       return true;
     }
   })
@@ -29,17 +32,65 @@ function Hour({hour, liturgy}) {
     try {
       const v = localStorage.getItem('psaltermatic.showLa');
       return v === null ? true : v === '1';
-    } catch (e) {
+    } catch {
       return true;
     }
   })
 
+  const hourRef = useRef(null)
+
+  async function downloadPdf() {
+    const dateNode = document.getElementById('print-date-section')
+    const hourNode = hourRef.current
+    if (!dateNode || !hourNode) return
+
+    const wrapper = document.createElement('div')
+    wrapper.style.position = 'absolute'
+    wrapper.style.top = '-9999px'
+    wrapper.style.left = '-9999px'
+    wrapper.style.width = '210mm'
+    wrapper.style.background = '#ffffff'
+    wrapper.style.padding = '16px'
+    wrapper.style.boxSizing = 'border-box'
+    wrapper.style.color = '#000000'
+    wrapper.style.fontFamily = 'sans-serif'
+
+    const dateClone = dateNode.cloneNode(true)
+    dateClone.removeAttribute('id')
+    wrapper.appendChild(dateClone)
+    wrapper.appendChild(hourNode.cloneNode(true))
+    document.body.appendChild(wrapper)
+
+    const canvas = await html2canvas(wrapper, { scale: 2, useCORS: true, backgroundColor: '#ffffff' })
+    document.body.removeChild(wrapper)
+
+    const imgData = canvas.toDataURL('image/png')
+    const pdf = new jsPDF('portrait', 'mm', 'a4')
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+    const pageHeight = pdf.internal.pageSize.getHeight()
+    let position = 0
+
+    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight)
+    let heightLeft = pdfHeight - pageHeight
+    while (heightLeft > 0) {
+      position = heightLeft - pdfHeight
+      pdf.addPage()
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight)
+      heightLeft -= pageHeight
+    }
+
+    const safeHour = name ? name.replace(/[^a-z0-9]+/gi, '_').toLowerCase() : 'hour'
+    const filename = `${date.toISOString().split('T')[0]}_${safeHour}.pdf`
+    pdf.save(filename)
+  }
+
   useEffect(() => {
-    try { localStorage.setItem('psaltermatic.showFr', showFr ? '1' : '0'); } catch(e) {}
+    try { localStorage.setItem('psaltermatic.showFr', showFr ? '1' : '0'); } catch (_error) { void _error; }
   }, [showFr]);
 
   useEffect(() => {
-    try { localStorage.setItem('psaltermatic.showLa', showLa ? '1' : '0'); } catch(e) {}
+    try { localStorage.setItem('psaltermatic.showLa', showLa ? '1' : '0'); } catch (_error) { void _error; }
   }, [showLa]);
 
   useEffect(() => {
@@ -63,6 +114,14 @@ function Hour({hour, liturgy}) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8, gap: 8 }}>
         <button
           className="toggle-btn"
+          onClick={downloadPdf}
+          title="Télécharger la page en PDF"
+        >
+          Générer PDF
+        </button>
+
+        <button
+          className="toggle-btn"
           aria-pressed={!showLa}
           onClick={() => setShowLa(s => !s)}
           title="Raccourci: L"
@@ -80,7 +139,7 @@ function Hour({hour, liturgy}) {
         </button>
       </div>
 
-      <div className="hour-columns" style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+      <div ref={hourRef} className="hour-columns" style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
         {showLa && (
           <section className="card hour-page" style={{ marginTop: 16 }}>
             <h2>{getLatinHourName(name)}</h2>

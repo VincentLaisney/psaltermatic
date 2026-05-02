@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 eslint.config.js
 public/vite.svg
+src/extract-tools
 *.pl
 
 # Environment variables

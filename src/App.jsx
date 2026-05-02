@@ -28,7 +28,7 @@ function App() {
           <main className="app">
             <Header date={{currentDate, setCurrentDate}} />
 
-            <section className="card" style={{ marginTop: 16 }}>
+            <section id="print-date-section" className="card" style={{ marginTop: 16 }}>
               <p style={{ fontWeight: 'bold', textAlign: 'center'}}>{currentDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
               <p style={{ fontStyle: 'italic'}}>{liturgy.asText}</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
