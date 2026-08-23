@@ -10,12 +10,28 @@ function getLiturgyForDate(date0) {
   
   return ({asText: `De ea. ${number}ᵉ semaine du ${season}`, 
     date: date0,
-    Matines: getMatinesForm(date), 
+    matines: getMatinesForm(date), 
     ML: ML, maria_ant: maria_ant, 
     notable_dates: notable_dates, 
     temporal: tempo.tempo, 
     prov_test: tempo.prov_test,
-    year_letter: getYearLetter(date.getFullYear())});
+    year_letter: getYearLetter(date.getFullYear()),
+    hebdomada: Math.floor(dateDiffInDays(precSunday(date), new Date(2011,11,27)) / 7) % 2,
+    })
+}
+
+function precSunday(date) {
+  const diff = date.getDay();
+  const prevSunday = new Date(date);
+  prevSunday.setDate(date.getDate() - diff);
+  return prevSunday;
+}
+
+function dateDiffInDays(date1, date2) {
+  const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+//   const utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+//   const utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+  return Math.floor((date1 - date2) / _MS_PER_DAY);
 }
 
 function getLiturgicalTempusForDate(weekNumber, date) {

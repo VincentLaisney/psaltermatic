@@ -51,7 +51,28 @@ function PsalmsWithSchema({ content, defaultSchema }) {
         
         })
     }</>);
-}            
+}   
 
-export { PsalmsWithSchema, TextWithRef }; ;
-export default Verses ;
+function Invitatoire({ content, psalm }) {
+
+    if (Array.isArray(psalm)) {
+        return psalm.map((line, index) => {
+            if (line.startsWith('$ant')) {
+                return <span key={index}>{content}<br/></span>;
+            }
+            return <span key={index}>{line}<br/></span>;
+        });
+    } else if (typeof psalm === 'string' && psalm.includes('\n')) {
+        return psalm.split('\n').map((line, index) => {
+            if (line.startsWith('$ant')) {
+                return <p key={index}>{content}<br/></p>;
+            }
+            return <p key={index}>{line}<br/></p>;
+        });
+    } else {
+        return <span>{psalm}</span>;
+    }
+}
+
+export { PsalmsWithSchema, TextWithRef, Invitatoire };
+export default Verses;

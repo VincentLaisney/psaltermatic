@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HourContext } from '../pages/Hour.jsx'
-import Verses, { PsalmsWithSchema, TextWithRef } from './Verses.jsx'
+import Verses, { PsalmsWithSchema, TextWithRef, Invitatoire } from './Verses.jsx'
 import api from '../services/api'
 
 function HourContent({ hour, lang, liturgy }) {
@@ -45,14 +45,33 @@ function HourContent({ hour, lang, liturgy }) {
                 case 'simple':
                     return (
                         <div className="hour-text">
-                            <p>{content.initial_verset || ''}</p>
-                            <p>{content.hymn || ''}</p>
+                            <p className='lettrine'><Verses content={content.domine_labia || ''} /></p>
+                            <p className='lettrine'><Verses content={content.ps_3 || ''} /></p>
+                            <Invitatoire content={content.invitatoire || ''} psalm={content.psInvit || 'ps94Inv'} />
+                            <p className='lettrine'><Verses content={content.hymn || ''} /></p>
+                            <PsalmsWithSchema content={content} 
+                            defaultSchema={content.schema_noct1} />
+                            <p><Verses content={content.verset1 || ''} /></p>
+                            <p><Verses content={content.benedictio || ''} /></p>
+                            <p className='lettrine'><Verses content={content.readings || ''} /></p>
+                            <p className='lettrine'><Verses content={content.respons || ''} /></p>
+                            <PsalmsWithSchema content={content} 
+                            defaultSchema={content.schema_noct2} />
+                            <p className='lettrine'><Verses content={content.capit || ''} /></p>
+                            <p><Verses content={content.verset || ''} /></p>
+                            <p><Verses content={content.kyrie || ''} /></p>
+                            <p><Verses content={content.pater_silent || ''} /></p>
+                            <p><Verses content={content.dominus || ''} /></p>
+                            <p><Verses content={content.oratio || ''} /></p>
+                            <p><Verses content={content.dominus || ''} /></p>
+                            <p><Verses content={content.benedicamus || ''} /></p>
+                            <p><Verses content={content.fidelium_animae || ''} /></p>
+                            <p><Verses content={content.divinum || ''} /></p>    
                         </div>
                     );
                 case '2noct':
                     return (
                         <div className="hour-text">
-                            <p>{content.initial_verset || ''}</p>
                             <p>{content.hymn || ''}</p>
                         </div>
                     );

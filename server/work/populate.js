@@ -14,6 +14,30 @@ async function populate_with_texts(lang, liturgy, json) {
         // console.log(`populate_with_texts: json after adding maria_ant key:`, json);
     }
 
+    if ('schema_noct1_h1' in json && 'schema_noct1_h2' in json) {
+        if (liturgy.hebdomada === 1) {
+            json.schema_noct1 = json['schema_noct1_h1'];
+            delete_psalms(json, json['schema_noct1_h2']);
+        } else {
+            json.schema_noct1 = json['schema_noct1_h2'];
+            delete_psalms(json, json['schema_noct1_h1']);
+        }
+        delete json['schema_noct1_h1'];
+        delete json['schema_noct1_h2'];
+    }
+
+    if ('schema_noct2_h1' in json && 'schema_noct2_h2' in json) {
+        if (liturgy.hebdomada === 1) {
+            json.schema_noct2 = json['schema_noct2_h1'];
+            delete_psalms(json, json['schema_noct2_h2']);
+        } else {
+            json.schema_noct2 = json['schema_noct2_h2'];
+            delete_psalms(json, json['schema_noct2_h1']);
+        }
+        delete json['schema_noct2_h1'];
+        delete json['schema_noct2_h2'];
+    }
+
 	if ('hymn-hiem' in json && 'hymn-aest' in json) {
 		if (dateObj.getMonth() >= 9 || dateObj < liturgy.notable_dates.easter) { // From October to Easter
 			json.hymn = json['hymn-hiem'];
@@ -48,7 +72,7 @@ async function populate_with_texts(lang, liturgy, json) {
     const result = {};
     const promises = Object.keys(json).map(async (key) => {
         const textKey = json[key];
-        if (['schema', 'oratio'].includes(key)) {
+        if (['schema', 'schema_noct1', 'schema_noct2', 'oratio'].includes(key)) {
             // console.log(`populate_with_texts: skipping text loading for key ${key} with value ${textKey} as it's a special key.`);
             result[key] = textKey;
             return;
@@ -134,6 +158,15 @@ async function populate_with_texts(lang, liturgy, json) {
     await Promise.all(promises);
     // console.log('populate_with_texts: loaded texts, returning result object:', result);
     return result;
+}
+
+function delete_psalms(json,schema) {
+    const parts = schema.split('_');
+    for (const part of parts) {
+        if (part.startsWith('ps')) {
+            delete json[part];
+        }
+    }
 }
 
 function getSaturdayFirstAntiphon(temporal) {
