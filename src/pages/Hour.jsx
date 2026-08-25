@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import React, { useState, useEffect, useRef } from 'react'
+import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import HourContent from '../components/HourContent.jsx'
 
@@ -38,61 +39,50 @@ function Hour({hour, liturgy}) {
 
   const hourRef = useRef(null)
 
-  function downloadPdf() {
+  async function downloadPdf() {
     const dateNode = document.getElementById('print-date-section')
     const hourNode = hourRef.current
     if (!dateNode || !hourNode) return
 
-    const doc = new jsPDF('portrait', 'mm', 'a4')
-    const margin = 16
-    const pageWidth = doc.internal.pageSize.getWidth()
-    const pageHeight = doc.internal.pageSize.getHeight()
-    const maxLineWidth = pageWidth - margin * 2
-    const lineHeight = 5
+    const wrapper = document.createElement('div')
+    wrapper.style.position = 'absolute'
+    wrapper.style.top = '-9999px'
+    wrapper.style.left = '-9999px'
+    wrapper.style.width = '210mm'
+    wrapper.style.background = '#ffffff'
+    wrapper.style.padding = '16px'
+    wrapper.style.boxSizing = 'border-box'
+    wrapper.style.color = '#000000'
+    wrapper.style.fontFamily = 'sans-serif'
 
-    doc.setFont('Times', 'Roman')
+    const dateClone = dateNode.cloneNode(true)
+    dateClone.removeAttribute('id')
+    wrapper.appendChild(dateClone)
+    wrapper.appendChild(hourNode.cloneNode(true))
+    document.body.appendChild(wrapper)
 
-    let y = margin
+    const canvas = await html2canvas(wrapper, { scale: 2, useCORS: true, backgroundColor: '#ffffff' })
+    document.body.removeChild(wrapper)
 
-    const addText = (text, fontSize = 11, isBold = false) => {
-      doc.setFontSize(fontSize)
-      if (isBold) doc.setFont('Times', 'Bold')
-      else doc.setFont('Times', 'Roman')
+    const imgData = canvas.toDataURL('image/png')
+    const pdf = new jsPDF('portrait', 'mm', 'a4')
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+    const pageHeight = pdf.internal.pageSize.getHeight()
+    let position = 0
 
-      const cleanedText = text.replace(/\n\s*\n/g, '\n').trim()
-      const lines = doc.splitTextToSize(cleanedText, maxLineWidth)
-      lines.forEach(line => {
-        if (y > pageHeight - margin) {
-          doc.addPage()
-          y = margin
-        }
-        doc.text(line, margin, y)
-        y += lineHeight
-      })
+    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight)
+    let heightLeft = pdfHeight - pageHeight
+    while (heightLeft > 0) {
+      position = heightLeft - pdfHeight
+      pdf.addPage()
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight)
+      heightLeft -= pageHeight
     }
-
-    // Add date section
-    addText(dateNode.innerText.trim())
-    y += lineHeight // extra space after date
-
-    // Add hour sections
-    const sections = hourNode.querySelectorAll('section.card')
-    sections.forEach(section => {
-      const h2 = section.querySelector('h2')
-      if (h2) {
-        addText(h2.innerText.trim(), 14, true)
-        y += lineHeight // space after heading
-      }
-      const contentDiv = section.querySelector('.hour-text')
-      if (contentDiv) {
-        addText(contentDiv.innerText.trim())
-        y += lineHeight * 2 // extra space between sections
-      }
-    })
 
     const safeHour = name ? name.replace(/[^a-z0-9]+/gi, '_').toLowerCase() : 'hour'
     const filename = `${date.toISOString().split('T')[0]}_${safeHour}.pdf`
-    doc.save(filename)
+    pdf.save(filename)
   }
 
   useEffect(() => {
