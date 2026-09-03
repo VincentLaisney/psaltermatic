@@ -81,13 +81,11 @@ async function ordinary(date, hour, lang = 'la') {
 		}
 	} else {
 		const lit_split = liturgical_day.split('_');
-		console.log(`ordinary() add oratio: ${lit_split[0]}, ${lit_split[1]}, ${lit_split[2]}`);
 		if (['pent', 'epi'].includes(lit_split[0])) {
 			psalter.oratio = `${lit_split[0]}${lit_split[1]}`;
 		} else {
 			psalter.oratio = `${liturgical_day}`;
 		}
-		console.log(`ordinary() add oratio: ${psalter.oratio}`);
 	}
 
 	return await populate_with_texts(lang, liturgy, {...psalter, ...commun });
