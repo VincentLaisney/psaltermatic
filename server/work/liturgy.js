@@ -1,17 +1,19 @@
 function getLiturgyForDate(date0) {
   const date = new Date(date0);
-  const weekNumber = Math.floor((dayOfYear(date) - date.getDay()) / 7);
-  const {season, number} = getLiturgicalTempusForDate(weekNumber, date); 
-  const ML_nr = weekNumber - 3;
-  const ML = (ML_nr <= 3) ? `sept${ML_nr}` : `quad${ML_nr - 3}`;
-  const tempo = get_tempo(date);
+//   const weekNumber = Math.floor((dayOfYear(date) - date.getDay()) / 7);
+//   const ML_nr = weekNumber - 3;
+//   const ML = (ML_nr <= 3) ? `sept${ML_nr}` : `quad${ML_nr - 3}`;
+  const tempo = get_tempo(date); // or date0 ?
+  const {season, number} = getLiturgicalTempusForDate(tempo.tempo); 
   const maria_ant = getMariaAntiphonForDate(date, tempo.tempo);
   const notable_dates = {easter: getEasterDate(date.getFullYear()), advent: getAdventStart(date.getFullYear()), lent: new Date(getEasterDate(date.getFullYear()).getTime() - 46 * 24 * 60 * 60 * 1000), pentecost: new Date(getEasterDate(date.getFullYear()).getTime() + 49 * 24 * 60 * 60 * 1000)};
   
-  return ({asText: `De ea. ${number}ᵉ semaine du ${season}`, 
+  return ({
+    asText: `De ea. ${number}ᵉ semaine du ${season}`, 
     date: date0,
     matines: getMatinesForm(date), 
-    ML: ML, maria_ant: maria_ant, 
+    ML: tempo.ML, 
+    maria_ant: maria_ant, 
     notable_dates: notable_dates, 
     temporal: tempo.tempo, 
     prov_test: tempo.prov_test,
@@ -34,23 +36,35 @@ function dateDiffInDays(date1, date2) {
   return Math.floor((date1 - date2) / _MS_PER_DAY);
 }
 
-function getLiturgicalTempusForDate(weekNumber, date) {
-  const easter= getEasterDate(date.getFullYear());
-  if (weekNumber >= 0 && weekNumber <= 6) {
-    return {    season: 'Temps ordinaire', number: weekNumber   };
-  } else if (date >= easter - 46 * 24 * 60 * 60 * 1000 && date < easter) {
-    return {    season: 'Carême', number: weekNumber - 6   };
-  } else if ((date >= easter) && date < new Date(easter).getTime() + 49 * 24 * 60 * 60 * 1000) {
-    return {    season: 'Pâques', number: date.getDate() - easter.getDate() + 1     };
-  } else if (date >= getAdventStart(date.getFullYear()) && date < new Date(date.getFullYear(), 11, 25)) {
-    return {    season: 'Avent', number: 1 + Math.floor((date - getAdventStart(date.getFullYear())) / (7 * 24 * 60 * 60 * 1000))   };  
-  } else {
-    return {    season: 'Temps ordinaire', number: weekNumber - 6   };
+function getLiturgicalTempusForDate(tempo) {
+  const tempo_parts = tempo.split('_');
+  const season = tempo_parts[0];
+  const weekNumber = parseInt(tempo_parts[1], 10);
+  switch (season) {
+    case 'adv':
+      return { season: 'Avent', number: weekNumber };
+    case 'vil':
+      return { season: 'Temps de Noël', number: 4 };
+    case 'noel':
+      return { season: 'Temps de Noël', number: 1 };
+    case 'ste':
+      return { season: 'Temps de Noël', number: 2 };
+    case 'qua':
+      return { season: 'Carême', number: weekNumber - 6 };
+    case 'cendres':
+      return { season: 'Carême', number: weekNumber - 6 };
+    case 'tp':
+      return { season: 'Pâques', number: weekNumber - 6 };
+    case 'pa':
+      return { season: 'Temps ordinaire', number: weekNumber };
+     default:
+      return { season: 'Temps ordinaire', number: weekNumber - 6 };
   }
 }
 
-function get_tempo(date) {
-    // Returns the tempo ref according to the given date.
+function get_tempo(dateRaw) {
+    // Returns the temporal ref according to the given date.
+    const date = new Date(dateRaw.getFullYear(), dateRaw.getMonth(), dateRaw.getDate()); // Normalize to midnight local time
     const prov_test = {};
     const weekday = date.getDay(); // JS: Sunday=0, Python: Monday=0, Sunday=6
     const liturgical_year = getLiturgicalYear(date);
@@ -64,29 +78,33 @@ function get_tempo(date) {
         baptism_of_christ = new Date(liturgical_year, 0, 7);
     } else {
         holy_family = new Date(christmas);
-        holy_family.setDate(christmas.getDate() + (6 - christmas.getDay()));
+        holy_family.addDaysToDate(6 - christmas.getDay());
         if (christmas.getDay() !== 1) { // Monday in JS
             baptism_of_christ = new Date(holy_family);
-            baptism_of_christ.setDate(holy_family.getDate() + 14);
+            baptism_of_christ.addDaysToDate(14);
         } else {
             baptism_of_christ = new Date(liturgical_year, 0, 7);
         }
     }
 
     const easter = getEasterDate(liturgical_year);
+    const septuagesim = new Date(easter);
+    septuagesim.substractDaysFromDate(63);
     const ash = new Date(easter);
-    ash.setDate(easter.getDate() - 46);
+    ash.substractDaysFromDate(46);
     const pentecost = new Date(easter);
-    pentecost.setDate(easter.getDate() + 49);
+    pentecost.addDaysToDate(49);
     const first_sunday_of_next_advent = getAdventStart(liturgical_year);
     const christ_king = new Date(first_sunday_of_next_advent);
-    christ_king.setDate(first_sunday_of_next_advent.getDate() - 7);
+    christ_king.substractDaysFromDate(7);
 
+    prov_test.date = date;
     prov_test.first_sunday_of_advent = first_sunday_of_advent;
     prov_test.christmas = christmas;
     prov_test.christmas_next = christmas_next;
     prov_test.holy_family = holy_family;
     prov_test.baptism_of_christ = baptism_of_christ;
+    prov_test.septuagesim = septuagesim;
     prov_test.ash = ash;
     prov_test.easter = easter;
     prov_test.pentecost = pentecost;
@@ -94,6 +112,7 @@ function get_tempo(date) {
     prov_test.christ_king = christ_king;
 
     let tempo = null;
+    let ML = null;
 
     function daysBetween(d1, d2) {
         return Math.floor((d1 - d2) / (1000 * 60 * 60 * 24));
@@ -122,6 +141,13 @@ function get_tempo(date) {
         const days = daysBetween(date, baptism_of_christ);
         const week = Math.floor(days / 7) + 1;
         tempo = `pa_${week}_${weekday}`;
+        if (date >= septuagesim && date < ash) {
+            const days = daysBetween(date, septuagesim);
+            const week = Math.floor(days / 7) + 1;
+            ML = `sept_${week}_${weekday}`;
+        } else {
+            ML = `epi_${week}_${weekday}`;
+        }
     } else if (date >= ash && date < easter) {
         const days = daysBetween(date, ash);
         if (days < 4) {
@@ -137,7 +163,7 @@ function get_tempo(date) {
     } else if (date >= pentecost && date < first_sunday_of_next_advent) {
         const pentecostPlus = (days) => {
             const d = new Date(pentecost);
-            d.setDate(pentecost.getDate() + days);
+            d.addDaysToDate(days);
             return d;
         };
         if (date.getTime() === pentecostPlus(7).getTime()) {
@@ -154,9 +180,16 @@ function get_tempo(date) {
             const days = daysBetween(first_sunday_of_next_advent, date);
             const week = 35 - Math.floor(days / 7 + (weekday !== 0 ? 1 : 0));
             tempo = `pa_${week}_${weekday}`;
+            const daysSincePentecost = daysBetween(date, pentecost);
+            const weekSincePentecost = Math.floor(daysSincePentecost / 7);
+            ML = `pent_${weekSincePentecost}_${weekday}`;
+            // TODO Dimanches après l'épiphanie à réinsérer ici.
         }
     }
-    return {tempo, prov_test};
+    if (!ML) {
+        ML = tempo;
+    }
+    return {tempo, ML, prov_test};
 }
 
 function getMariaAntiphonForDate(date, tempo) {
@@ -219,6 +252,16 @@ function getMatinesForm(date) {
 
 function dayOfYear(date) { 
     return Math.floor((date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) 
+}
+const DAY_IN_MS = 1000 * 60 * 60 * 24;
+Date.prototype.substractDaysFromDate = function (diff) {
+    this.setTime(this.getTime() - diff * DAY_IN_MS);
+    return this;
+}
+
+Date.prototype.addDaysToDate = function (diff) {
+    this.setTime(this.getTime() + diff * DAY_IN_MS);
+    return this;
 }
 
 // eslint-disable-next-line no-undef

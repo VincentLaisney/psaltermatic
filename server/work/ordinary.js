@@ -35,7 +35,7 @@ async function ordinary(date, hour, lang = 'la') {
 			return await populate_with_texts(lang, liturgy, {reading: `${liturgy.temporal}_${liturgy.year_letter}_1`, reading_2: `${liturgy.temporal}_${liturgy.year_letter}_2`, gospel: `${liturgy.temporal}_${liturgy.year_letter}_ev`});
 		} else if (liturgy.temporal.startsWith('pa_')) { // per annum
 			const even_num = dateObj.getFullYear() % 2 === 0 ? 2 : 1; // alternate between the two sets of readings each year
-			return await populate_with_texts(lang, liturgy, {reading: `${liturgy.temporal}_${even_num}_1`, reading_2: `${liturgy.temporal}_${even_num}_2`, gospel: `${liturgy.temporal}_${even_num}_ev`});
+			return await populate_with_texts(lang, liturgy, {reading: `${liturgy.temporal}_1_${even_num}`, reading_2: `${liturgy.temporal}_2_${even_num}`, gospel: `${liturgy.temporal}_ev`});
 		} else {
 			return await populate_with_texts(lang, liturgy, {reading: `${liturgy.temporal}_1`, reading_2: '`${liturgy.temporal}_2`', gospel: `${liturgy.temporal}_ev`});
 		}
@@ -68,9 +68,11 @@ async function ordinary(date, hour, lang = 'la') {
 		console.warn('ordinary(): DB lookup failed for commun', e.message);
 	}
 	// Add oratio
+	// TODO A revoir
 	const liturgical_day = liturgy.ML;
 	let dies = liturgy.temporal;
 	const dies_p = dies.split('_');
+	// A revoir
 	if (liturgical_day.startsWith('cendre') || liturgical_day.startsWith('qua')) {
 		psalter.oratio = `${dies_p[0] === 'qua' ? 'quad' : 'sept'}${dies_p[1]}${dies_p[2] !== '0' ? `-${dies_p[2]}` : ''}`;
 		// console.log(`ordinary() add oratio: ${psalter.oratio}`)
@@ -78,7 +80,14 @@ async function ordinary(date, hour, lang = 'la') {
 			psalter.oratio = `${psalter.oratio}-V`;
 		}
 	} else {
-		psalter.oratio = liturgical_day; // provisory. Put the preceding Sunday's
+		const lit_split = liturgical_day.split('_');
+		console.log(`ordinary() add oratio: ${lit_split[0]}, ${lit_split[1]}, ${lit_split[2]}`);
+		if (['pent', 'epi'].includes(lit_split[0])) {
+			psalter.oratio = `${lit_split[0]}${lit_split[1]}`;
+		} else {
+			psalter.oratio = `${liturgical_day}`;
+		}
+		console.log(`ordinary() add oratio: ${psalter.oratio}`);
 	}
 
 	return await populate_with_texts(lang, liturgy, {...psalter, ...commun });
